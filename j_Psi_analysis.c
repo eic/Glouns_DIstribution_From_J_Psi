@@ -1,6 +1,7 @@
-//Code written by Olaiya Olokunboyo, University of New Hampshire for
+//Code written by Olaiya Olokunboyo, University of New Hampshire, for
 //generating gluons distribution and necessary kinematics.
-//To run on the default input file (streaming files from server), make sure you are in eic-shell environment.
+//To run on the default input file (streaming files from server), make sure you are in the eic-shell environment.
+//May.21.2025
 
 
 #include <iostream>
@@ -27,8 +28,8 @@ using std::string;
 
 void j_Psi_analysis() {
     //TString fileList = "q2_1-10.list";
-    //TString fileList = "Jan_2025_1.list"; // local
-    TString fileList = "Feb_2025_0.list"; // stream
+    //TString fileList = "Jan_2025_1.list"; // local file
+    TString fileList = "May_2025_1.list"; // stream
     
     // Output and run configuration
     TString outputName   = "benchmark_data_10x100_";
