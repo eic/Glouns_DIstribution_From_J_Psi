@@ -1,3 +1,13 @@
+NB: Code still under development.
+
+To generate the input list files, do the following while in the eic-shell environment.
+
+xrdfs root://dtn-eic.jlab.org ls /volatile/eic/EPIC/RECO/25.04.1/epic_craterlake/EXCLUSIVE/DIFFRACTIVE_JPSI_ABCONV/lAger3.6.1-1.0/10x100/hiAcc | sed 's|^|root://dtn-eic.jlab.org/|g' > April_2025_1.list
+
+This example is for 10x100 beam energy. 
+
+Please take a look below to learn how to get the EIC software environment.
+
 EIC software environment container utilities
 ============================================
 
