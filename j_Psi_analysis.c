@@ -1,6 +1,7 @@
 //Code written by Olaiya Olokunboyo, University of New Hampshire for
 //generating gluons distribution and necessary kinematics.
 //To run on the default input file (streaming files from server), working in the eic-shell environment is preferable.
+//May.22.2025
 
 
 #include <iostream>
