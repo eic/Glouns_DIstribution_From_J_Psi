@@ -1,7 +1,6 @@
-//Code written by Olaiya Olokunboyo, University of New Hampshire, for
+//Code written by Olaiya Olokunboyo, University of New Hampshire for
 //generating gluons distribution and necessary kinematics.
-//To run on the default input file (streaming files from server), make sure you are in the eic-shell environment.
-//May.21.2025
+//To run on the default input file (streaming files from server), working in the eic-shell environment is preferable.
 
 
 #include <iostream>
@@ -28,7 +27,7 @@ using std::string;
 
 void j_Psi_analysis() {
     //TString fileList = "q2_1-10.list";
-    //TString fileList = "Jan_2025_1.list"; // local file
+    //TString fileList = "Jan_2025_1.list"; // local
     TString fileList = "Feb_2025_0.list"; // stream
     
     // Output and run configuration
@@ -361,18 +360,6 @@ void j_Psi_analysis() {
         TTreeReaderArray<float> rp_ref_y(treeReader, "ForwardRomanPotRecParticles.referencePoint.y");
         TTreeReaderArray<float> rp_ref_z(treeReader, "ForwardRomanPotRecParticles.referencePoint.z");
         
-        // B0 Tracker
-        TTreeReaderArray<float> b0_hit_x(treeReader, "B0TrackerRecHits.position.x");
-        TTreeReaderArray<float> b0_hit_y(treeReader, "B0TrackerRecHits.position.y");
-        TTreeReaderArray<float> b0_hit_z(treeReader, "B0TrackerRecHits.position.z");
-        TTreeReaderArray<float> b0_hit_eDep(treeReader, "B0TrackerRecHits.edep");
-        
-        // B0 EMCAL
-        TTreeReaderArray<float> b0_cluster_x(treeReader, "B0ECalClusters.position.x");
-        TTreeReaderArray<float> b0_cluster_y(treeReader, "B0ECalClusters.position.y");
-        TTreeReaderArray<float> b0_cluster_z(treeReader, "B0ECalClusters.position.z");
-        TTreeReaderArray<float> b0_cluster_energy(treeReader, "B0ECalClusters.energy");
-        
         // Reconstructed tracks
         TTreeReaderArray<float> reco_track_px(treeReader, "ReconstructedTruthSeededChargedParticles.momentum.x");
         TTreeReaderArray<float> reco_track_py(treeReader, "ReconstructedTruthSeededChargedParticles.momentum.y");
@@ -390,24 +377,6 @@ void j_Psi_analysis() {
         TTreeReaderArray<float> ecalN_t(treeReader, "EcalEndcapNClusters.time");
         TTreeReaderArray<float> ecalN_theta(treeReader, "EcalEndcapNClusters.intrinsicTheta");
         TTreeReaderArray<float> ecalN_phi(treeReader, "EcalEndcapNClusters.intrinsicPhi");
-        
-        TTreeReaderArray<float> ecalN_hit_x(treeReader, "EcalEndcapNRecHits.position.x");
-        TTreeReaderArray<float> ecalN_hit_y(treeReader, "EcalEndcapNRecHits.position.y");
-        TTreeReaderArray<float> ecalN_hit_energy(treeReader, "EcalEndcapNRecHits.energy");
-        
-        // Barrel ECAL
-        TTreeReaderArray<float> ecalBarrelScFi_energy(treeReader, "EcalBarrelScFiClusters.energy");
-        TTreeReaderArray<float> ecalBarrelScFi_theta(treeReader, "EcalBarrelScFiClusters.intrinsicTheta");
-        TTreeReaderArray<float> ecalBarrelImaging_energy(treeReader, "EcalBarrelImagingClusters.energy");
-        TTreeReaderArray<float> ecalBarrelImaging_theta(treeReader, "EcalBarrelImagingClusters.intrinsicTheta");
-        
-        // Generated Particles
-        TTreeReaderArray<float> gen_px(treeReader, "GeneratedParticles.momentum.x");
-        TTreeReaderArray<float> gen_py(treeReader, "GeneratedParticles.momentum.y");
-        TTreeReaderArray<float> gen_pz(treeReader, "GeneratedParticles.momentum.z");
-        TTreeReaderArray<float> gen_mass(treeReader, "GeneratedParticles.mass");
-        TTreeReaderArray<int>   gen_pdg(treeReader, "GeneratedParticles.PDG");
-        TTreeReaderArray<float> gen_charge(treeReader, "GeneratedParticles.charge");
         
         // Inclusive kinematics
         TTreeReaderArray<float> ik_electron_x(treeReader, "InclusiveKinematicsElectron.x");
@@ -745,7 +714,7 @@ void j_Psi_analysis() {
             // Loop over EM clusters to find the one with highest energy
             for (int iclus = 0; iclus < ecalN_energy.GetSize(); ++iclus) {
                 
-                double clusterEnergy = ecalN_energy[iclus] * 1.03; // Apply energy scale factor
+                double clusterEnergy = ecalN_energy[iclus]; // Apply energy scale factor
                 
                 if (clusterEnergy > maxEnergy) {
                     maxEnergy = clusterEnergy;
@@ -857,143 +826,143 @@ void j_Psi_analysis() {
                         continue;
                     }
                 }
-            }
-            
-            // Fill reconstructed electron and positron kinematics
-            rcElectron->Fill(eq1.Eta());
-            rcElectronpt->Fill(eq1.Pt());
-            rcPositron->Fill(rcpv2.Eta());
-            rcPositronpt->Fill(rcpv2.Pt());
-            
-            // Fill J/ψ daughter electron kinematics
-            rcElectronjpsieta->Fill(rcpv1.Eta());
-            rcElectronjpsipt->Fill(rcpv1.Pt());
-            
-            // 2D η distributions
-            eEta2D->Fill(vecjpsi.Eta(), vec2.Eta());
-            pEta2D->Fill(rcpv1.Eta(), rcpv2.Eta());
-            
-            // Scattered electron energy
-            scat_e_RC->Fill(eq1.E());
-            
-            // Calculate and fill Ecal/pz
-            tot_p = sqrt(eq1.Pt()*eq1.Pt() + eq1.Pz()*eq1.Pz());
-            Ecal_vs_pz->Fill(maxEnergy / tot_p);
-            
-            // Compute Q² using scattered electron angle
-            thetaChPct = eq1.Theta() - TMath::Pi();
-            q2_1 = 4 * incbeame.E() * eq1.E() * TMath::Power(TMath::Sin(thetaChPct / 2.0), 2);
-            mtqq->Fill(q2_1);
-            q2_2D->Fill(q2, q2_1); // 2D Q² comparison
-            
-            // --- Jacquet-Blondel reconstructed kinematics ---
-            if (iflagproton == 1 || iflagproton2 == 1) {
-                TLorentzVector jb_vec = (iflagproton == 1) ? (vec5 + rcpv1 + rcpv2) : (vec4 + rcpv1 + rcpv2);
+                //} //if this bracket is opened, then no exclusivity applied
                 
-                jbpt2_rc = jb_vec.Px()*jb_vec.Px() + jb_vec.Py()*jb_vec.Py();
-                jbsig_rc = jb_vec.E() - jb_vec.Pz();
-                y_JB_rc = jbsig_rc / (2 * incbeame.E());
-                q2_JB_rc = jbpt2_rc / (1 - y_JB_rc);
-                x_JB_rc = q2_JB_rc / (4 * incbeame.E() * incbeam.E() * y_JB_rc);
+                // Fill reconstructed electron and positron kinematics
+                rcElectron->Fill(eq1.Eta());
+                rcElectronpt->Fill(eq1.Pt());
+                rcPositron->Fill(rcpv2.Eta());
+                rcPositronpt->Fill(rcpv2.Pt());
+                
+                // Fill J/ψ daughter electron kinematics
+                rcElectronjpsieta->Fill(rcpv1.Eta());
+                rcElectronjpsipt->Fill(rcpv1.Pt());
+                
+                // 2D η distributions
+                eEta2D->Fill(vecjpsi.Eta(), vec2.Eta());
+                pEta2D->Fill(rcpv1.Eta(), rcpv2.Eta());
+                
+                // Scattered electron energy
+                scat_e_RC->Fill(eq1.E());
+                
+                // Calculate and fill Ecal/pz
+                tot_p = sqrt(eq1.Pt()*eq1.Pt() + eq1.Pz()*eq1.Pz());
+                Ecal_vs_pz->Fill(maxEnergy / tot_p);
+                
+                // Compute Q² using scattered electron angle
+                thetaChPct = eq1.Theta() - TMath::Pi();
+                q2_1 = 4 * incbeame.E() * eq1.E() * TMath::Power(TMath::Sin(thetaChPct / 2.0), 2);
+                mtqq->Fill(q2_1);
+                q2_2D->Fill(q2, q2_1); // 2D Q² comparison
+                
+                // --- Jacquet-Blondel reconstructed kinematics ---
+                if (iflagproton == 1 || iflagproton2 == 1) {
+                    TLorentzVector jb_vec = (iflagproton == 1) ? (vec5 + rcpv1 + rcpv2) : (vec4 + rcpv1 + rcpv2);
+                    
+                    jbpt2_rc = jb_vec.Px()*jb_vec.Px() + jb_vec.Py()*jb_vec.Py();
+                    jbsig_rc = jb_vec.E() - jb_vec.Pz();
+                    y_JB_rc = jbsig_rc / (2 * incbeame.E());
+                    q2_JB_rc = jbpt2_rc / (1 - y_JB_rc);
+                    x_JB_rc = q2_JB_rc / (4 * incbeame.E() * incbeam.E() * y_JB_rc);
+                    
+                    // Fill 1D histograms
+                    JB_y_RC->Fill(y_JB_rc);
+                    JB_q2_RC->Fill(q2_JB_rc);
+                    JB_x_RC->Fill(x_JB_rc);
+                    
+                    // Fill differences
+                    diff_JB_q2->Fill((q2_JB - q2_JB_rc) / q2_JB);
+                    diff_JB_y->Fill((y_JB - y_JB_rc) / y_JB);
+                    diff_JB_xbjk->Fill((x_JB - x_JB_rc) / x_JB);
+                    
+                    // Fill 2D histograms
+                    JB_q2_2D->Fill(q2_JB, q2_JB_rc);
+                    dJB_q2_2D->Fill(q2_JB, (q2_JB - q2_JB_rc) / q2_JB);
+                    JB_y_2D->Fill(y_JB, y_JB_rc);
+                    dJB_y_2D->Fill(y_JB, (y_JB - y_JB_rc) / y_JB);
+                    JB_xbjk_2D->Fill(x_JB, x_JB_rc);
+                    dJB_xbjk_2D->Fill(x_JB, (x_JB - x_JB_rc) / x_JB);
+                }
+                
+                // --- eSigma Method ---
+                Sig_e_rc = eq1.E() - eq1.Pz();
+                y_e_rc = 1 - (Sig_e_rc / (2 * incbeame.E()));
+                Sig_tot_rc = Sig_e_rc + jbsig_rc;
+                y_Sig_rc = jbsig_rc / Sig_tot_rc;
+                
+                q2_Sig_rc = (eq1.Px()*eq1.Px() + eq1.Py()*eq1.Py()) / (1 - y_Sig_rc);
+                q2_e_rc = (eq1.Px()*eq1.Px() + eq1.Py()*eq1.Py()) / (1 - y_e_rc);
+                x_Sig_rc = q2_Sig_rc / (4 * incbeame.E() * incbeam.E() * y_Sig_rc);
+                y_eSig_rc = q2_e_rc / (4 * incbeame.E() * incbeam.E() * x_Sig_rc);
                 
                 // Fill 1D histograms
-                JB_y_RC->Fill(y_JB_rc);
-                JB_q2_RC->Fill(q2_JB_rc);
-                JB_x_RC->Fill(x_JB_rc);
+                eSig_y_RC->Fill(y_eSig_rc);
+                eSig_q2_RC->Fill(q2_e_rc);
+                eSig_x_RC->Fill(x_Sig_rc);
                 
                 // Fill differences
-                diff_JB_q2->Fill((q2_JB - q2_JB_rc) / q2_JB);
-                diff_JB_y->Fill((y_JB - y_JB_rc) / y_JB);
-                diff_JB_xbjk->Fill((x_JB - x_JB_rc) / x_JB);
+                diff_eSig_q2->Fill((q2_e - q2_e_rc) / q2_e);
+                diff_eSig_y->Fill((y_eSig - y_eSig_rc) / y_eSig);
+                diff_eSig_xbjk->Fill((x_Sig - x_Sig_rc) / x_Sig);
                 
                 // Fill 2D histograms
-                JB_q2_2D->Fill(q2_JB, q2_JB_rc);
-                dJB_q2_2D->Fill(q2_JB, (q2_JB - q2_JB_rc) / q2_JB);
-                JB_y_2D->Fill(y_JB, y_JB_rc);
-                dJB_y_2D->Fill(y_JB, (y_JB - y_JB_rc) / y_JB);
-                JB_xbjk_2D->Fill(x_JB, x_JB_rc);
-                dJB_xbjk_2D->Fill(x_JB, (x_JB - x_JB_rc) / x_JB);
-            }
-            
-            // --- eSigma Method ---
-            Sig_e_rc = eq1.E() - eq1.Pz();
-            y_e_rc = 1 - (Sig_e_rc / (2 * incbeame.E()));
-            Sig_tot_rc = Sig_e_rc + jbsig_rc;
-            y_Sig_rc = jbsig_rc / Sig_tot_rc;
-            
-            q2_Sig_rc = (eq1.Px()*eq1.Px() + eq1.Py()*eq1.Py()) / (1 - y_Sig_rc);
-            q2_e_rc = (eq1.Px()*eq1.Px() + eq1.Py()*eq1.Py()) / (1 - y_e_rc);
-            x_Sig_rc = q2_Sig_rc / (4 * incbeame.E() * incbeam.E() * y_Sig_rc);
-            y_eSig_rc = q2_e_rc / (4 * incbeame.E() * incbeam.E() * x_Sig_rc);
-            
-            // Fill 1D histograms
-            eSig_y_RC->Fill(y_eSig_rc);
-            eSig_q2_RC->Fill(q2_e_rc);
-            eSig_x_RC->Fill(x_Sig_rc);
-            
-            // Fill differences
-            diff_eSig_q2->Fill((q2_e - q2_e_rc) / q2_e);
-            diff_eSig_y->Fill((y_eSig - y_eSig_rc) / y_eSig);
-            diff_eSig_xbjk->Fill((x_Sig - x_Sig_rc) / x_Sig);
-            
-            // Fill 2D histograms
-            eSig_q2_2D->Fill(q2_e, q2_e_rc);
-            deSig_q2_2D->Fill(q2_e, (q2_e - q2_e_rc) / q2_e);
-            eSig_y_2D->Fill(y_eSig, y_eSig_rc);
-            deSig_y_2D->Fill(y_eSig, (y_eSig - y_eSig_rc) / y_eSig);
-            eSig_xbjk_2D->Fill(x_Sig, x_Sig_rc);
-            deSig_xbjk_2D->Fill(x_Sig, (x_Sig - x_Sig_rc) / x_Sig);
-            
-            // --- J/ψ Invariant Mass Checks ---
-            JPsi22 = rcpv1 + rcpv2;
-            JPsi222 = eq1 + rcpv2;
-            
-            if (JPsi22.M() > 2 && JPsi22.M() < 3.6 && JPsi222.M() > 2 && JPsi222.M() < 3.6)
-                rcJPsiMass11->Fill(JPsi22.M());
-            
-            if (JPsi222.M() > 2 && JPsi222.M() < 3.6 && JPsi22.M() > 2 && JPsi22.M() < 3.6)
-                rcJPsiMass111->Fill(JPsi222.M());
-            
-            if (iflagproton == 1) {
-                auto totalVec = rcpv1 + rcpv2 + eq1 + vec5;
-                double eMinusPz = totalVec.E() - totalVec.Pz();
-                if (eMinusPz > 15 && eMinusPz < 25) {
-                    rcjpsie_e_minus_pz->Fill(eMinusPz);
+                eSig_q2_2D->Fill(q2_e, q2_e_rc);
+                deSig_q2_2D->Fill(q2_e, (q2_e - q2_e_rc) / q2_e);
+                eSig_y_2D->Fill(y_eSig, y_eSig_rc);
+                deSig_y_2D->Fill(y_eSig, (y_eSig - y_eSig_rc) / y_eSig);
+                eSig_xbjk_2D->Fill(x_Sig, x_Sig_rc);
+                deSig_xbjk_2D->Fill(x_Sig, (x_Sig - x_Sig_rc) / x_Sig);
+                
+                // --- J/ψ Invariant Mass Checks ---
+                JPsi22 = rcpv1 + rcpv2;
+                JPsi222 = eq1 + rcpv2;
+                
+                if (JPsi22.M() > 2 && JPsi22.M() < 3.6 && JPsi222.M() > 2 && JPsi222.M() < 3.6)
+                    rcJPsiMass11->Fill(JPsi22.M());
+                
+                if (JPsi222.M() > 2 && JPsi222.M() < 3.6 && JPsi22.M() > 2 && JPsi22.M() < 3.6)
+                    rcJPsiMass111->Fill(JPsi222.M());
+                
+                if (iflagproton == 1) {
+                    auto totalVec = rcpv1 + rcpv2 + eq1 + vec5;
+                    double eMinusPz = totalVec.E() - totalVec.Pz();
+                    if (eMinusPz > 15 && eMinusPz < 25) {
+                        rcjpsie_e_minus_pz->Fill(eMinusPz);
+                    }
                 }
-            }
-            
-            if (iflagproton2 == 1) {
-                auto totalVec = rcpv1 + rcpv2 + eq1 + vec4;
-                double eMinusPz = totalVec.E() - totalVec.Pz();
-                if (eMinusPz > 15 && eMinusPz < 25) {
-                    rcjpsie_e_minus_pz->Fill(eMinusPz);
+                
+                if (iflagproton2 == 1) {
+                    auto totalVec = rcpv1 + rcpv2 + eq1 + vec4;
+                    double eMinusPz = totalVec.E() - totalVec.Pz();
+                    if (eMinusPz > 15 && eMinusPz < 25) {
+                        rcjpsie_e_minus_pz->Fill(eMinusPz);
+                    }
                 }
-            }
-            
-            // Reconstructed J/ψ from two positron candidates
-            JPsi2 = rcpv1 + rcpv2;
-            rcJPsiMass1->Fill(JPsi2.M());
-            diffjpsimass->Fill((JPsi1.M() - JPsi2.M()) / JPsi1.M());
-            
-            // Reconstructed kinematics (x_bj and x_v)
-            double denom = 2.0 * incbeam.Dot(incbeame - eq1);
-            ixb1 = q2_1 / denom;
-            ixv1 = (q2_1 + JPsi2.M() * JPsi2.M()) / denom;
-            
-            xb1->Fill(ixb1);
-            xv1->Fill(ixv1);
-            
-            // Kinematic difference histograms
-            diffq2->Fill((q2 - q2_1) / q2);
-            diffx_v->Fill((ixb - ixb1) / ixb);
-            diffxbjk->Fill((ixb - ixb1) / ixb);
-            diffy->Fill((rap - raprc) / rap);
-            
-            // 2D correlation plots
-            xbjk_2D->Fill(ixb, ixb1);
-            y_2D->Fill(rap, raprc);
-            dxbjk_2D->Fill(q2, q2 - q2_1);
-            
+                
+                // Reconstructed J/ψ from two positron candidates
+                JPsi2 = rcpv1 + rcpv2;
+                rcJPsiMass1->Fill(JPsi2.M());
+                diffjpsimass->Fill((JPsi1.M() - JPsi2.M()) / JPsi1.M());
+                
+                // Reconstructed kinematics (x_bj and x_v)
+                double denom = 2.0 * incbeam.Dot(incbeame - eq1);
+                ixb1 = q2_1 / denom;
+                ixv1 = (q2_1 + JPsi2.M() * JPsi2.M()) / denom;
+                
+                xb1->Fill(ixb1);
+                xv1->Fill(ixv1);
+                
+                // Kinematic difference histograms
+                diffq2->Fill((q2 - q2_1) / q2);
+                diffx_v->Fill((ixb - ixb1) / ixb);
+                diffxbjk->Fill((ixb - ixb1) / ixb);
+                diffy->Fill((rap - raprc) / rap);
+                
+                // 2D correlation plots
+                xbjk_2D->Fill(ixb, ixb1);
+                y_2D->Fill(rap, raprc);
+                dxbjk_2D->Fill(q2, q2 - q2_1);
+            }//with the closing bracket exclusivity is applied
         }
         inputRootFile->Close();
     }
