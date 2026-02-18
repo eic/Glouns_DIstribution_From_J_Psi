@@ -1,0 +1,45 @@
+[1732211689, lager, info] LAGER version: 3.7.0
+[1732211689, lager, info] Starting event generator...
+[1732211689, lager, info] Initializing LAGER for lp-gamma processes
+[1732211689, lager, info] Initializing the RNG with seed 1
+[1732211689, lager, info] Initializing the output buffer
+[1732211689, lager, info] Also outputting text output for HepMC
+[1732211689, event_out, info] Initializing ROOT output stream
+[1732211689, lager, info] Initializing the event generator
+[1732211689, event_generator, info] Initializing the process list
+[1732211689, oleksii_2vmp, info] t range [GeV^2]: [-5189.461952, -0.000003]
+[1732211689, oleksii_2vmp, info] b parameter lower limit [1/GeV^2]: 2.102182
+[1732211689, oleksii_2vmp, info] b parameter upper limit [1/GeV^2]: 3.991137
+[1732211689, oleksii_2vmp, info] subtraction constant T0: 0.000000
+[1732211689, oleksii_2vmp, info] R_vm c-parameter: 2.164000
+[1732211689, oleksii_2vmp, info] R_vm n-parameter (power): 2.131000
+[1732211689, oleksii_2vmp, info] 'Dipole' FF power: 2.575000
+[1732211689, oleksii_2vmp, info] VM: J/psi
+[1732211689, oleksii_2vmp, info] recoil: proton
+[1732211689, event_generator, info] advanced/penalty: 1.000000
+[1732211689, initial::origin_vertex, info] Vertex generator initialized
+[1732211689, initial::constant_beam, info] type: e-
+[1732211689, initial::constant_beam, info] energy [GeV]: 10.000000
+[1732211689, initial::constant_beam, info] type: proton
+[1732211689, initial::constant_beam, info] energy [GeV]: 130.000000
+[1732211689, primary_target, info] Using primary ion beam as target
+[1732211689, vphoton, info] Q2 range [GeV^2]: [1.000000, 10.000000]
+[1732211689, vphoton, info] y range [GeV^2]: [0.001000, 1.000000]
+[1732211689, vphoton, info] W range (default) [GeV}: [0.938272, 72.116660]
+[1732211689, decay, info] VM decays into e+e-
+[1732211689, decay, info] VM Branching ratio set to: 0.059710
+[1732211689, decay, info] Simulating radiative decay for VM particles
+[1732211689, reconstruction, info] Require leading hadron: false
+[1732211689, reconstruction, info] Require scattered lepton: false
+[1732211689, reconstruction, info] Require recoil: false
+[1732211689, reconstruction, info] Veto leading hadron: false
+[1732211689, reconstruction, info] Veto scattered lepton: false
+[1732211689, reconstruction, info] Veto recoil: false
+[1732211689, lager, info] Starting the main generation loop
+[1732212921, lager, info] Event generation complete
+[1732212921, lager, info] Total number of generated events: 199430
+[1732212921, lager, info] Total accepted cross section [nb]: 3.339941e-01
+[1732212921, lager, info] Partial accepted cross section with BR [nb]: 1.994279e-02
+[1732212921, lager, info]  --> Acceptance [%]: 99.999499
+[1732212921, lager, info] Writing generation statistics to output file
+[1732212921, lager, info] Finished.
