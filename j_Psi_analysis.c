@@ -46,23 +46,25 @@ void modify_jpsi() {
     //TString fileList = "August_2025_1.list";
     //TString fileList = "Jan_2025_1.list"; // local
     //TString fileList = "July_25_1.list"; // stream
+    TString fileList = "../10x130_jpsi/October_2025_2.list"; // stream
     //TString fileList = "../10x130_jpsi/June_1.list"; // stream
     //TString fileList = "../10x130_jpsi/August_2025_0.list"; // stream
     //TString fileList = "../10x130_jpsi/Background_full.list"; // stream
+    //TString fileList = "October_2025_2.list"; // stream
     //TString fileList = "../10x130_jpsi/June_2025_full.list"; // stream
     //TString fileList = "June_1.list"; // stream
     //TString fileList = "June_2025_sep.list"; // stream
     //TString fileList = "June_2025_full.list"; // stream
-    TString fileList = "Background_noise.list"; // stream
+    //TString fileList = "Background_noise.list"; // stream
     //TString fileList = "Background_noise_3.list"; // stream
     //TString fileList = "test.list";
     
     // Output and run configuration
-    //TString outputName   = "../10x130_jpsi/benchmark_data_10x130_";
+    TString outputName   = "../10x130_jpsi/benchmark_data_10x130_";
     //TString outputName   = "background_";
     //TString outputName   = "benchmark_data_10x100_";
-    TString outputName   = "../10x130_jpsi/background_";
-    TString date         = "Nov_2025_";
+    //TString outputName   = "../10x130_jpsi/background_";
+    TString date         = "Feb_2026_";
     TString run          = "run_0";
     TString fileType     = ".root";
     
@@ -126,8 +128,11 @@ void modify_jpsi() {
     TH1D *diff_eSig_xbjk = new TH1D("diff_eSig_xbjk"," ", 500, -5, 5);
     TH1D *diff_eSig_y = new TH1D("diff_eSig_y"," ", 500, -5, 5);
     TH1D *diff_JB_q2 = new TH1D("diff_JB_q2"," ", 500, -5, 5);
+    TH1D *diff_DA_q2 = new TH1D("diff_DA_q2"," ", 500, -5, 5);
     TH1D *diff_JB_y = new TH1D("diff_JB_y"," ", 500, -5, 5);
+    TH1D *diff_DA_y = new TH1D("diff_DA_y"," ", 500, -5, 5);
     TH1D *diff_JB_xbjk = new TH1D("diff_JB_xbjk"," ", 500, -5, 5);
+    TH1D *diff_DA_x = new TH1D("diff_DA_x"," ", 500, -5, 5);
     
     //Missing Transverse Quantities
     TH1D *mtg = new TH1D("mtg","", 200, 0, 5);
@@ -135,10 +140,11 @@ void modify_jpsi() {
     TH1D *mtgTot = new TH1D("mtgTot","", 200, 0, 5);
     TH1D *mtgTot1 = new TH1D("mtgTot1","", 200, 0, 5);
     TH1D *mtgg = new TH1D("mtgg","", 200, 0, 5);
-    TH1D *mtggtest = new TH1D("mtggtest","", 500, -5, 0);
-    TH1D *mtggtest_rc = new TH1D("mtggtest_rc","", 500, -5, 0);
+    TH1D *mtggtest = new TH1D("mtggtest","", 200, -5, 0);
+    TH1D *mtggtest_rc = new TH1D("mtggtest_rc","", 200, -5, 0);
     TH1D *mtgg_accept = new TH1D("mtgg_accept","", 200, 0, 5);
     TH1D *two_meth_tdist = new TH1D("two_meth_tdist","", 200, 0, 5);
+    TH1D *two_meth_tdist_accept = new TH1D("two_meth_tdist_accept","", 200, 0, 5);
     TH1D *mtq = new TH1D("mtq","", 50, 0, 11);
     TH1D *mtqq = new TH1D("mtqq","", 50, 0, 11);
     TH1D *mtqq_2 = new TH1D("mtqq_2","", 50, 0, 11);
@@ -175,6 +181,17 @@ void modify_jpsi() {
     TH1D *JB_x_RC = new TH1D("JB_x_RC","", 2000, -0.01, 1.01);
     TH1D *JB_x_acc = new TH1D("JB_x_acc","", 2000, -0.01, 1.01);
     
+    //double angle method
+    TH1D *DA_y_MC = new TH1D("DA_y_MC","", 100,-0.01,1.05);
+    TH1D *DA_y_RC = new TH1D("DA_y_RC","", 100,-0.01,1.05);
+    TH1D *DA_y_MC_a = new TH1D("DA_y_MC_a","", 100,-0.01,1.05);
+    TH1D *DA_q2_MC = new TH1D("DA_q2_MC","", 50, 0, 11);
+    TH1D *DA_q2_acc = new TH1D("DA_q2_acc","", 50, 0, 11);
+    TH1D *DA_q2_RC = new TH1D("DA_q2_RC","", 50, 0, 11);
+    TH1D *DA_x_MC = new TH1D("DA_x_MC","", 2000, -0.01, 1.01);
+    TH1D *DA_x_RC = new TH1D("DA_x_RC","", 2000, -0.01, 1.01);
+    TH1D *DA_x_acc = new TH1D("DA_x_acc","", 2000, -0.01, 1.01);
+    
     //Inclusive Variables
     TH1D *EM_x = new TH1D("EM_x","", 2000, -0.01, 1.01);
     TH1D *EM_Q2 = new TH1D("EM_Q2","", 50, 0, 11);
@@ -185,6 +202,9 @@ void modify_jpsi() {
     TH1D *JB_x_in = new TH1D("JB_x_in","", 2000, -0.01, 1.01);
     TH1D *JB_Q2_in = new TH1D("JB_Q2_in","", 50, 0, 11);
     TH1D *JB_y_in = new TH1D("JB_y_in","", 100,-0.01,1.05);
+    TH1D *DA_x_in = new TH1D("DA_x_in","", 2000, -0.01, 1.01);
+    TH1D *DA_Q2_in = new TH1D("DA_Q2_in","", 50, 0, 11);
+    TH1D *DA_y_in = new TH1D("DA_y_in","", 100,-0.01,1.05);
     
     //x-Variables
     TH1D *xb = new TH1D("xb","",  2000, -0.01, 1.01);
@@ -206,7 +226,7 @@ void modify_jpsi() {
     
     //2D histograms
     TH2D* q2_2D = new TH2D("q2_2D","q2_2D", 100, 1, 10, 100, 1, 10);
-    TH2D* xbjk_2D = new TH2D("xbjk_2D","xbjk_2D", 100, 0, 0.5, 100, 0, 0.5);
+    TH2D* xbjk_2D = new TH2D("xbjk_2D","xbjk_2D", 500, 0, 0.5, 500, 0, 0.5);
     TH2D* y_2D = new TH2D("y_2D","y_2D", 100, 0, 1, 100, 0, 1);
     TH2D* t_2D = new TH2D("t_2D","t_2D", 100, 0, 2, 100, 0, 2);
     TH2D* dxbjk_2D = new TH2D("dxbjk_2D","dxbjk_2D", 500, 0, 0.03, 100, -1, 1);
@@ -231,6 +251,11 @@ void modify_jpsi() {
     TH2D* dJB_y_2D = new TH2D("dJB_y_2D"," ", 100, 0, 1, 100, -1, 1);
     TH2D* JB_xbjk_2D = new TH2D("JB_xbjk_2D"," ", 100, 0, 0.5, 100, 0, 0.5);
     TH2D* dJB_xbjk_2D = new TH2D("dJB_xbjk_2D"," ", 100, 0, 0.5, 100, -1, 1);
+    
+    //DA
+    TH2D* DA_x_2D = new TH2D("DA_q2_2D"," ", 500, 0, 0.5, 100, 0, 0.5);
+    TH2D* DA_q2_2D = new TH2D("DA_q2_2D"," ", 100, 1, 10, 100, 1, 10);
+    TH2D* DA_y_2D = new TH2D("DA_y_2D"," ", 100, 0, 1, 100, 0, 1);
     
     //fProton
     TH1D* h6_eta_MC = new TH1D("h6_eta",";Pseudorapidity, #eta",100,0.0,15.0);
@@ -282,6 +307,13 @@ void modify_jpsi() {
     TH1D* e_pz_rc = new TH1D("e_pz_rc", ";E/p_{z}", 200, 0.9, 2);
     TH2D* e_pz_2D = new TH2D("e_pz_2D", "E/p_{z} (Reco);E/p_{z} (MC)", 100, 0.9, 2, 100, 0.9, 2);
     
+    TH1D* E_P_final_SCe_MC = new TH1D("E_P_final_SCe_MC", ";E/p_{z}", 200, 0, 2);
+    TH1D* E_P_final_DCe_MC = new TH1D("E_P_final_DCe_MC", ";E/p_{z}", 200, 0, 2);
+    TH1D* E_P_final_Posit_MC = new TH1D("E_P_final_Posit_MC", ";E/p_{z}", 200, 0, 2);
+    TH1D* E_P_final_SCe_RC = new TH1D("E_P_final_SCe_RC", ";E/p_{z}", 200, 0, 2);
+    TH1D* E_P_final_DCe_RC = new TH1D("E_P_final_DCe_RC", ";E/p_{z}", 200, 0, 2);
+    TH1D* E_P_final_Posit_RC = new TH1D("E_P_final_Posit_RC", ";E/p_{z}", 200, 0, 2);
+    
     //Roman pots
     TH1D* h_px_RomanPots = new TH1D("px_RomanPots", ";p_{x} [GeV/c]", 100, -10.0, 10.0);
     TH1D* h_py_RomanPots = new TH1D("py_RomanPots", ";p_{y} [GeV/c]", 100, -10.0, 10.0);
@@ -332,6 +364,7 @@ void modify_jpsi() {
     TH2D* t2D_with_diff_allCroll = new TH2D("t2D_with_diff_allCroll"," ", 200, 0, 2, 200, 0, 2);
     
     TH2D* eptest = new TH2D("eptest", " ", 100, -2, 2, 100, -2, 2);
+    TH1D* AllMCFinalEta = new TH1D("AllMCFinalEta", " ; #eta", 200, -10, 10);
     
     //purity and stabilty
     int nbins = 100;
@@ -345,6 +378,11 @@ void modify_jpsi() {
     TH1D* h_stability_JB = new TH1D("h_stability_JB", "Stability per Q^{2} bin;Q^{2}_{Truth} bin;Stability", nbins, q2min, q2max);
     TH1D* h_purity_eS = new TH1D("h_purity_eS", "Purity per Q^{2} bin;Q^{2}_{Reco} bin;Purity", nbins, q2min, q2max);
     TH1D* h_stability_eS = new TH1D("h_stability_eS", "Stability per Q^{2} bin;Q^{2}_{Truth} bin;Stability", nbins, q2min, q2max);
+    
+    TH1D* h_missingMass = new TH1D("h_missingMass", ";Missing mass;", 100, -10, 10);
+    TH1D* h_missingMass2 = new TH1D("h_missingMass2", ";Missing mass squared;", 100, -10, 20);
+    TH1D* h_missingMass_rc = new TH1D("h_missingMass_rc", ";Missing mass RECO;", 100, -10, 10);
+    TH1D* h_missingMass2_rc = new TH1D("h_missingMass2_rc", ";Missing mass squared RECO;", 100, -10, 20);
     
     
     
@@ -388,11 +426,13 @@ void modify_jpsi() {
     
     // JB input values
     double JB_x_in_value = 0, JB_Q2_in_value = 0, JB_y_in_value = 0;
+    // DA input values
+    double DA_x_in_value = 0, DA_Q2_in_value = 0, DA_y_in_value = 0;
     
     // Weights and total momentum
     double tot_p = 0, tg1 = 0, tg2 = 0;
     double weight = 0, weight1 = 0, weight2 = 0, t_another = 0, t_another_rc = 0, t_another_acc = 0, t_another_neg = 0;
-    int z0 = 0, z1 = 0, z2 = 0, z3 = 0, z4 = 0, z5 = 0, z55 = 0, z6 = 0;//counting
+    int z0 = 0, z1 = 0, z2 = 0, z3 = 0, z4 = 0, z5 = 0, z55 = 0, z6 = 0, mcj = 0, rcj = 0, t_di = 0;//counting
     
     // Luminosity in nb^-1 (10 fb^-1)
     const double lumi_gen = 1.0e7;
@@ -502,6 +542,10 @@ void modify_jpsi() {
         TTreeReaderArray<float> ik_jb_Q2(treeReader, "InclusiveKinematicsJB.Q2");
         TTreeReaderArray<float> ik_jb_y(treeReader, "InclusiveKinematicsJB.y");
         
+        TTreeReaderArray<float> ik_DA_x(treeReader, "InclusiveKinematicsDA.x");
+        TTreeReaderArray<float> ik_DA_Q2(treeReader, "InclusiveKinematicsDA.Q2");
+        TTreeReaderArray<float> ik_DA_y(treeReader, "InclusiveKinematicsDA.y");
+        
         // Set the range of events to read
         treeReader.SetEntriesRange(0, numEvents);
         
@@ -535,6 +579,7 @@ void modify_jpsi() {
                     } else if (pdg == 2212 && charge == 1) {
                         incbeam.SetXYZM(px, py, pz, m);
                         incbeam.RotateY(0.025);
+                        if (incbeam.M() <= 0) continue;
                         has_incbeam = true;
                     }
                 }
@@ -545,10 +590,9 @@ void modify_jpsi() {
                         ++n_electrons_final;
                         if (!has_vec3ck_1) { vec3ck_1.SetXYZM(px, py, pz, m); has_vec3ck_1 = true; }
                         else if (!has_vec3ck_2) { vec3ck_2.SetXYZM(px, py, pz, m); has_vec3ck_2 = true; }
-                        // if more electrons appear, consider storing a vector of candidates
                     }
                     else if (pdg == -11 && charge == 1) {
-                        vec2.SetXYZM(px, py, pz, m); has_vec2 = true; // positron from J/psi
+                        vec2.SetXYZM(px, py, pz, m); has_vec2 = true;
                     }
                     else if (pdg == 2212 && charge == 1) {
                         vec1.SetXYZM(px, py, pz, m); vec1.RotateY(0.025); has_vec1 = true;
@@ -563,6 +607,8 @@ void modify_jpsi() {
                 }
             } // end mc loop
             
+            if (incbeam.M() <= 0) continue;
+            
             if (!has_incbeam || !has_incbeame || !has_vec2 || (!has_vec3ck_1 && !has_vec3ck_2) || !has_vec1) {
                 // skip event or handle differently
                 continue;
@@ -573,10 +619,10 @@ void modify_jpsi() {
             if (has_vec3ck_1 && has_vec3ck_2) {
                 JPsichk = vec2 + vec3ck_1;
                 JPsi1   = vec2 + vec3ck_2;
-
-                bool mass1_inwindow = (JPsichk.M() > 2.2 && JPsichk.M() < 3.6);
-                bool mass2_inwindow = (JPsi1.M()   > 2.2 && JPsi1.M()   < 3.6);
-
+                
+                bool mass1_inwindow = (JPsichk.M() > 2.7 && JPsichk.M() < 3.2);
+                bool mass2_inwindow = (JPsi1.M()   > 2.7 && JPsi1.M()   < 3.2);
+                
                 if (mass1_inwindow && !mass2_inwindow) {
                     decayElectron = vec3ck_1; has_decay = true;
                     scatteredElectron = vec3ck_2; has_scattered = true;
@@ -597,27 +643,23 @@ void modify_jpsi() {
             } else if (has_vec3ck_1) {
                 // only one electron found
                 JPsichk = vec2 + vec3ck_1;
-                if (JPsichk.M() > 2.2 && JPsichk.M() < 3.6) { decayElectron = vec3ck_1; has_decay = true; }
+                if (JPsichk.M() > 2.9 && JPsichk.M() < 3.2) { decayElectron = vec3ck_1; has_decay = true; }
                 else { scatteredElectron = vec3ck_1; has_scattered = true; }
             } else if (has_vec3ck_2) {
                 JPsi1 = vec2 + vec3ck_2;
-                if (JPsi1.M() > 2.2 && JPsi1.M() < 3.6) { decayElectron = vec3ck_2; has_decay = true; }
+                if (JPsi1.M() > 2.9 && JPsi1.M() < 3.2) { decayElectron = vec3ck_2; has_decay = true; }
                 else { scatteredElectron = vec3ck_2; has_scattered = true; }
             }
             
             // require scatteredElectron present before using it
             if (!has_scattered) continue;
-
+            
             // check momentum nonzero
             if (scatteredElectron.P() <= 0) continue;
-
+            
             // energy/momentum ratio check (use TMath::Abs)
             double e_over_p = scatteredElectron.E() / TMath::Abs(scatteredElectron.P());
-            if (e_over_p < 0.8 || e_over_p > 1.2) continue;
-            
-            // corrected JPsi
-            if (has_decay) JPsi1_cor = vec2 + decayElectron;
-            else JPsi1_cor = vec2 + scatteredElectron; // fallback
+            if (e_over_p < 0.9 || e_over_p > 1.1) continue;
             
             double denom_rap_mc = incbeam.Dot(incbeame);
             if (TMath::Abs(denom_rap_mc) < 1e-12) continue; // avoid div-by-zero
@@ -629,17 +671,46 @@ void modify_jpsi() {
             
             double sinHalf = TMath::Sin(thetaMC/2.0);
             q2 = 4.0 * incbeame.E() * scatteredElectron.E() * sinHalf * sinHalf;
-
+            
             if (q2 < 1.0 || q2 > 10.0) continue;
             if (rap <= 0.1 || rap >= 1.0) continue;
+            z3++;
+            
+            // corrected JPsi
+            if (has_decay) {
+                JPsi1_cor = vec2 + decayElectron;
+                if (JPsi1_cor.M() < 2.9 || JPsi1_cor.M() > 3.2) continue;
+                
+                // Compute missing mass squared
+                TLorentzVector total_in  = incbeame + incbeam;
+                TLorentzVector total_out = scatteredElectron + vec1 + JPsi1_cor;
+                TLorentzVector missing   = total_in - total_out;
+                
+                double Mx2 = missing.M2();  // missing mass squared
+                double Mx  = missing.M();   // missing mass
+                if (fabs(Mx) > 3) continue;
+                h_missingMass2->Fill(Mx2);
+                h_missingMass->Fill(Mx);
+                
+                mcj++;
+                JPsiMass1->Fill(JPsi1_cor.M());
+                
+                // t3 for MC
+                TLorentzVector diff3 = incbeam - vec1;
+                t3 = -1.0 * diff3.Dot(diff3); // check sign convention
+                t_di++;
+                mtgg->Fill(t3);
+                mtggtest->Fill(-1*t3);
+            }
+            else continue;
             
             mtq->Fill(q2);
             mcrapid->Fill(rap);
-            JPsiMass1->Fill(JPsi1_cor.M());
             
             // ---- fill proton and electron histos only if vectors exist ----
             if (has_vec1) {
                 fProton->Fill(vec1.Eta());
+                AllMCFinalEta->Fill(vec1.Eta());
                 h6_eta_MC->Fill(vec1.Eta());
                 h6_px_MC->Fill(vec1.Px());
                 h6_py_MC->Fill(vec1.Py());
@@ -648,7 +719,7 @@ void modify_jpsi() {
                 h6_e_MC->Fill(vec1.E());
                 Teta->Fill(vec1.Theta());
             }
-
+            
             // scattered electron histos
             h2_e_MC->Fill(scatteredElectron.E());
             fElectron->Fill(scatteredElectron.Eta());
@@ -659,7 +730,7 @@ void modify_jpsi() {
             h8_pz_MC->Fill(scatteredElectron.Pz());
             h8_e_MC->Fill(scatteredElectron.E());
             Teta_e->Fill(scatteredElectron.Theta());
-
+            
             // jpsi decay electron histos
             if (has_decay) {
                 hjpsi_eta_MC->Fill(decayElectron.Eta());
@@ -669,7 +740,7 @@ void modify_jpsi() {
                 hjpsi_pz_MC->Fill(decayElectron.Pz());
                 hjpsi_e_MC->Fill(decayElectron.E());
             }
-
+            
             // positron (vec2)
             if (has_vec2) {
                 fPositron->Fill(vec2.Eta());
@@ -680,8 +751,11 @@ void modify_jpsi() {
                 h7_pz_MC->Fill(vec2.Pz());
                 h7_e_MC->Fill(vec2.E());
             }
-
+            
             e_pz_MC->Fill(scatteredElectron.E() / scatteredElectron.P());
+            E_P_final_SCe_MC->Fill(scatteredElectron.E() / scatteredElectron.P());
+            E_P_final_DCe_MC->Fill(decayElectron.E() / decayElectron.P());
+            E_P_final_Posit_MC->Fill(vec2.E() / vec2.P());
             
             // compute ixb, ixv safely
             double denom2 = 2.0 * incbeam.Dot(incbeame - scatteredElectron);
@@ -712,7 +786,7 @@ void modify_jpsi() {
                 double eta = -TMath::Log(TMath::Tan(findtheta / 2.0));
                 ecaleta->Fill(eta);
                 scat_e_EcalEnd->Fill(maxEnergy);
-
+                
                 // compute q2_2 carefully
                 double thetaShifted = ecal_theta - TMath::Pi(); // if that's intended
                 double sinHalfTheta = TMath::Sin(thetaShifted / 2.0);
@@ -745,6 +819,14 @@ void modify_jpsi() {
                 if (JB_Q2_in_value > 1 && JB_Q2_in_value < 10) JB_Q2_in->Fill(JB_Q2_in_value);
                 if (JB_y_in_value > 0.1 && JB_y_in_value < 1) JB_y_in->Fill(JB_y_in_value);
             }
+            for (int iDA = 0; iDA < ik_DA_x.GetSize(); iDA++){
+                DA_x_in_value = ik_DA_x[iDA];
+                DA_Q2_in_value = ik_DA_Q2[iDA];
+                DA_y_in_value = ik_DA_y[iDA];
+                if (DA_x_in_value > 0) DA_x_in->Fill(DA_x_in_value);
+                if (DA_Q2_in_value > 1 && DA_Q2_in_value < 10) DA_Q2_in->Fill(DA_Q2_in_value);
+                if (DA_y_in_value > 0.1 && DA_y_in_value < 1) DA_y_in->Fill(DA_y_in_value);
+            }
             //--------------------------------------------------------------
             
             // JB / eSigma: compute combined vector once
@@ -761,7 +843,7 @@ void modify_jpsi() {
                 x_JB = q2_JB / (4.0 * incbeame.E() * incbeam.E() * y_JB);
                 JB_x_MC->Fill(x_JB);
             }
-
+            
             // eSigma method (keep your formulas but guard divisions)
             Sig_e = scatteredElectron.E() - scatteredElectron.Pz();
             y_e = 1.0 - (Sig_e / (2.0 * incbeame.E()));
@@ -771,25 +853,28 @@ void modify_jpsi() {
             q2_e   = (TMath::Abs(1.0 - y_e)   > 1e-12) ? (scatteredElectron.Pt()*scatteredElectron.Pt()) / (1.0 - y_e)   : -1;
             x_Sig  = (TMath::Abs(4.0*incbeame.E()*incbeam.E()*y_Sig) > 1e-12) ? q2_Sig / (4.0*incbeame.E()*incbeam.E()*y_Sig) : -1;
             y_eSig = (TMath::Abs(4.0*incbeame.E()*incbeam.E()*x_Sig) > 1e-12) ? q2_e / (4.0*incbeame.E()*incbeam.E()*x_Sig) : -1;
-
+            
             if (y_eSig > 0.1 && y_eSig < 1) eSig_y_MC->Fill(y_eSig);
             if (q2_e > 1 && q2_e < 10) eSig_q2_MC->Fill(q2_e);
             if (x_Sig > 0) eSig_x_MC->Fill(x_Sig);
             eS_HFS_MC->Fill(Sig_tot);
-
+            
+            //computing the DA metho kinematics TMath::Sin(thetaShifted / 2.0)
+            double hadronHalfAngle = jbsig / sqrt(jbpt2) ;
+            double y_DA = hadronHalfAngle / (TMath::Tan(scatteredElectron.Theta()/2.0) + hadronHalfAngle);
+            if (y_DA > 0.1 && y_DA < 1) DA_y_MC->Fill(y_DA);
+            double q2_DA = 4.0*incbeame.E()*incbeame.E() / ((TMath::Tan(scatteredElectron.Theta()/2.0))*(TMath::Tan(scatteredElectron.Theta()/2.0)) + hadronHalfAngle);
+            if (q2_DA > 1 && q2_DA < 10) DA_q2_MC->Fill(q2_DA);
+            double x_DA = q2_DA / (4.0*incbeame.E()*incbeam.E()*y_DA);
+            if (x_DA > 0) DA_x_MC->Fill(x_DA);
+            
             // t and -t fill (keep your T->GetEntry logic if necessary)
             T->GetEntry(z6);
             t_lAger->Fill(-t);
             z6++;
-
-            // t3 for MC
-            TLorentzVector diff3 = incbeam - vec1;
-            t3 = -1.0 * diff3.Dot(diff3); // check sign convention
-            if (t3 < 0) continue;
-            mtgg->Fill(t3);
             
             TLorentzVector diff_forRP_acc(0,0,0,0);
-            TLorentzVector diff_forB0_acc = incbeam - vec1;
+            TLorentzVector diff_forB0_acc(0,0,0,0);
             
             //another method for t distribution
             TLorentzVector pr_beam_scattered_corr(0,0,0,0);
@@ -838,6 +923,7 @@ void modify_jpsi() {
                     
                     // Set 4-vector with mass from the collection
                     vec5.SetXYZM(rp_px[iRPPart], rp_py[iRPPart], rp_pz[iRPPart], rp_mass[iRPPart]);
+                    //if (vec5.M() <= 0) continue;
                     
                     RPfProton->Fill(vec5.Eta());
                     B0RPfProton->Fill(vec5.Eta()); //reserved for combined subsystems use
@@ -866,6 +952,7 @@ void modify_jpsi() {
                 else continue;
             }
             
+            
             //------reconstructed tracks with ACTS -- used for B0---------
             // Loop over reconstructed B0 tracker tracks
             TLorentzVector vec4;
@@ -883,6 +970,7 @@ void modify_jpsi() {
                     // Set mass-corrected 4-vector and rotate to remove crossing angle
                     vec4.SetXYZM(reco_track_px[iRecoTrk], reco_track_py[iRecoTrk], reco_track_pz[iRecoTrk], reco_track_mass[iRecoTrk]);
                     vec4.RotateY(0.025); // Remove crossing angle for B0
+                    //if (vec4.M() <= 0) continue;
                     
                     // Fill histograms
                     B0fProton->Fill(vec4.Eta());
@@ -921,7 +1009,7 @@ void modify_jpsi() {
             
             if (reco_part_px.GetSize() != 3) continue;
             if (reco_part_px.GetSize() != 3) continue;
-
+            
             // Identify indices by charge
             std::vector<int> ele_indices;
             std::vector<int> pos_indices;
@@ -930,19 +1018,14 @@ void modify_jpsi() {
                 if (charge == -1) ele_indices.push_back(i);
                 if (charge == 1)  pos_indices.push_back(i);
             }
-
+            
             // Require e⁺e⁻e⁻
             if (ele_indices.size() < 2 || pos_indices.size() < 1) continue;
-
+            
             // Assign based on pz ordering (consistent with MC)
-            if (reco_part_pz[ele_indices[0]] < reco_part_pz[ele_indices[1]]) {
-                neg1.SetXYZM(reco_part_px[ele_indices[0]], reco_part_py[ele_indices[0]], reco_part_pz[ele_indices[0]], reco_part_mass[ele_indices[0]]);
-                neg2.SetXYZM(reco_part_px[ele_indices[1]], reco_part_py[ele_indices[1]], reco_part_pz[ele_indices[1]], reco_part_mass[ele_indices[1]]);
-            } else {
-                neg2.SetXYZM(reco_part_px[ele_indices[0]], reco_part_py[ele_indices[0]], reco_part_pz[ele_indices[0]], reco_part_mass[ele_indices[0]]);
-                neg1.SetXYZM(reco_part_px[ele_indices[1]], reco_part_py[ele_indices[1]], reco_part_pz[ele_indices[1]], reco_part_mass[ele_indices[1]]);
-            }
-
+            neg1.SetXYZM(reco_part_px[ele_indices[0]], reco_part_py[ele_indices[0]], reco_part_pz[ele_indices[0]], reco_part_mass[ele_indices[0]]);
+            neg2.SetXYZM(reco_part_px[ele_indices[1]], reco_part_py[ele_indices[1]], reco_part_pz[ele_indices[1]], reco_part_mass[ele_indices[1]]);
+            
             // Build positron
             pos.SetXYZM(reco_part_px[pos_indices[0]], reco_part_py[pos_indices[0]], reco_part_pz[pos_indices[0]], reco_part_mass[pos_indices[0]]);
             positron_rc = pos;
@@ -950,20 +1033,20 @@ void modify_jpsi() {
             // Build possible J/psi candidates
             JPsi_cand1 = positron_rc + neg1;
             JPsi_cand2 = positron_rc + neg2;
-
+            
             const double M_JPSI = 3.0969;
             const double MASS_WINDOW = 0.7; // ±0.35 GeV
-
+            
             // Compute which combination is closer to J/psi mass
             double dM1 = fabs(JPsi_cand1.M() - M_JPSI);
             double dM2 = fabs(JPsi_cand2.M() - M_JPSI);
-
+            
             // Select decay and scattered electrons
-            if ( (JPsi_cand1.M() > 2.2 && JPsi_cand1.M() < 3.6) && (dM1 < dM2) ) {
+            if ( (JPsi_cand1.M() > 2.9 && JPsi_cand1.M() < 3.2) && abs(neg2.Pz()) > abs(neg1.Pz())  ) {
                 decayElectron_rc = neg1;
                 scatteredElectron_rc = neg2;
             }
-            else if ( (JPsi_cand2.M() > 2.2 && JPsi_cand2.M() < 3.6) && (dM2 < dM1) ) {
+            else if ( (JPsi_cand2.M() > 2.9 && JPsi_cand2.M() < 3.2) && abs(neg2.Pz()) < abs(neg1.Pz()) ) {
                 decayElectron_rc = neg2;
                 scatteredElectron_rc = neg1;
             }
@@ -971,12 +1054,8 @@ void modify_jpsi() {
             
             // E/P cut for scattered electron
             double ep_ratio = scatteredElectron_rc.E() / fabs(scatteredElectron_rc.P());
-            if (ep_ratio < 0.8 || ep_ratio > 1.2) continue;
+            if (ep_ratio < 0.9 || ep_ratio > 1.1) continue;
             if (scatteredElectron_rc.P() <= 0 || decayElectron_rc.P() <= 0) continue;//sanity check
-            
-            JPsi2_cor = positron_rc + decayElectron_rc;
-            JPsi22 = positron_rc + scatteredElectron_rc;
-            diffjpsimass->Fill((JPsi1_cor.M() - JPsi2_cor.M()) / JPsi2_cor.M());
             
             raprc = (incbeam.Dot(incbeame - scatteredElectron_rc)) / (incbeam.Dot(incbeame));
             thetaChPct = scatteredElectron_rc.Theta() - TMath::Pi();
@@ -984,12 +1063,128 @@ void modify_jpsi() {
             if ( !(scatteredElectron_rc.P() > 0)) continue;
             if (q2_1 < 1 || q2_1 > 10) continue;
             if (raprc <= 0.1 || raprc >= 1.0) continue;
+            
             mtqq->Fill(q2_1);
             mcrapidrc->Fill(raprc);
-            rcJPsiMass1->Fill(JPsi2_cor.M());
+            z4++;
+            
+            E_P_final_SCe_RC->Fill(scatteredElectron_rc.E() / scatteredElectron_rc.P());
+            E_P_final_DCe_RC->Fill(decayElectron_rc.E() / decayElectron_rc.P());
+            E_P_final_Posit_RC->Fill(positron_rc.E() / positron_rc.P());
+            
+            //------------acceptance----------------------------------------
+            q2_acc = q2;
+            q2_e_acc = q2_e;
+            q2_JB_acc = q2_JB;
+            rap_acc = rap;
+            y_JB_acc = y_JB;
+            y_eSig_acc = y_eSig;
+            
+            ixba = q2 / (2.0 * incbeam.Dot(incbeame - scatteredElectron_rc));
+            
+            JB_x_acc->Fill(x_JB);
+            eSig_x_acc->Fill(x_Sig);
+            DA_x_acc->Fill(x_DA);
+            
+            mtq_acc->Fill(q2_acc);
+            mcrapida->Fill(rap_acc);
+            if (y_JB_acc > 0.1 && y_JB_acc < 1) JB_y_MC_a->Fill(y_JB_acc);
+            if (y_DA > 0.1 && y_DA < 1) DA_y_MC_a->Fill(y_DA);
+            if (y_eSig_acc > 0.1 && y_eSig_acc < 1) eSig_y_MC_a->Fill(y_eSig_acc);
+            if (q2_JB_acc > 1 && q2_JB_acc < 10) JB_q2_acc->Fill(q2_JB_acc);
+            if (q2_DA > 1 && q2_DA < 10) DA_q2_acc->Fill(q2_DA);
+            if (q2_e_acc > 1 && q2_JB_acc < 10) eSig_q2_acc->Fill(q2_e_acc);
+            
+            xba->Fill(ixba);
+            //--------------------------------------------------------------
+            
+            JPsi22 = positron_rc + scatteredElectron_rc;
+            rcJPsiMass111->Fill(JPsi22.M());
+            JPsi2_cor = positron_rc + decayElectron_rc;
+            if (JPsi2_cor.M() > 2.9 && JPsi2_cor.M() < 3.2) {
+                
+                //-------------RP t------------------------------
+                diff_rp = incbeam - vec5;
+                if (iflagproton == 1 ) {
+                    t_accept1 = -1*diff_forRP_acc.Dot(diff_forRP_acc);//for MC;// for acceptance
+                    mtgg_accept->Fill(t_accept1);
+                    if (t_accept1 > 0) two_meth_tdist_accept->Fill(t_accept1);
+                    
+                    t1 = - diff_rp.Mag2();
+                    mtg->Fill(t1);
+                    
+                    
+                    mtgTot->Fill(t1);//for combined subsystems use
+                    mtggtest_rc->Fill(-1*t1);
+                    mtgTot1->Fill(t1); //for separate use, later
+                    
+                    // --- 2D Plot: true vs. RP-based t ---
+                    t_2D->Fill(t3, t1);
+                    two_meth_tdist->Fill(t1);
+                    t2D_with_diff_rp->Fill(t3, t1);
+                    t2D_with_diff_allCroll->Fill(t3, t1);
+                }
+                //------------------------------------------------
+                //--------------------B0-only |t|-----------------
+                // Acceptance-corrected t from MC
+                TLorentzVector diff_b0 = incbeam - vec4;
+                if (iflagproton2 == 1 ) {
+                    t_accept2 = -1*diff_forB0_acc.Dot(diff_forB0_acc);//for MC;
+                    mtgg_accept->Fill(t_accept2);
+                    if (t_accept2 > 0) two_meth_tdist_accept->Fill(t_accept2);
+                    t2 = - diff_b0.Mag2();
+                    mtgB0->Fill(t2);
+                    
+                    mtgTot->Fill(t2);
+                    mtggtest_rc->Fill(-1*t2);
+                    mtgTot1->Fill(t2);
+                    
+                    // 2D correlation plot
+                    t_2D->Fill(t3, t2);
+                    
+                    two_meth_tdist->Fill(t2);
+                    t2D_with_diff_B0->Fill(t3, t2);
+                    t2D_with_diff_allCroll->Fill(t3, t2);
+                }
+                //-------------------------------------------------------------
+                
+                rcJPsiMassa->Fill(JPsi1_cor.M());
+                
+                t_another_acc = t_another;
+                t_anotherhist_acc->Fill(t_another_acc);
+                
+                TLorentzVector pr_beam_scattered_corr_rc;
+                TLorentzVector pr_beam_scattered_rc = incbeam - (JPsi2_cor+scatteredElectron_rc-incbeame);
+                double p_Aplus_rc = pr_beam_scattered_rc.E()+pr_beam_scattered_rc.Pz();
+                double p_TAsquared_rc = (pr_beam_scattered_rc.Pt())*(pr_beam_scattered_rc.Pt());
+                double p_Aminus_rc = (incbeam.M()*incbeam.M() + p_TAsquared_rc) / p_Aplus_rc;
+                pr_beam_scattered_corr_rc.SetPxPyPzE(pr_beam_scattered_rc.Px(),pr_beam_scattered_rc.Py(),(p_Aplus_rc-p_Aminus_rc)/2, (p_Aplus_rc+p_Aminus_rc)/2);
+                
+                t_another_rc = -(incbeam - pr_beam_scattered_corr_rc).Dot(incbeam - pr_beam_scattered_corr_rc);
+                t_anotherhist_rc->Fill(t_another_rc);
+                t_another_2D->Fill(t_another, t_another_rc);
+                
+                rcJPsiMass1->Fill(JPsi2_cor.M());
+                
+                if (iflagproton == 1 || iflagproton2 == 1 ) {
+                    TLorentzVector reco_in  = incbeame + incbeam;
+                    TLorentzVector reco_out;
+                    if (iflagproton == 1 ) reco_out = scatteredElectron_rc + vec5 + JPsi2_cor;
+                    if (iflagproton2 == 1) reco_out = scatteredElectron_rc + vec4 + JPsi2_cor;
+                    TLorentzVector missing_rc   = reco_in - reco_out;
+                    
+                    double Mx2_rc = missing_rc.M2();  // missing mass squared
+                    double Mx_rc  = missing_rc.M();   // missing mass
+                    if (fabs(Mx_rc) > 3) continue;
+                    h_missingMass2_rc->Fill(Mx2_rc);
+                    h_missingMass_rc->Fill(Mx_rc);
+                    
+                    diffjpsimass->Fill((JPsi1_cor.M() - JPsi2_cor.M()) / JPsi2_cor.M());
+                }
+            }
             
             rcJPsiMass11->Fill(JPsi2_cor.M());
-            rcJPsiMass111->Fill(JPsi22.M());
+            rcj++;
             
             q2_2D->Fill(q2, q2_1); // 2D Q² comparison
             
@@ -1026,78 +1221,6 @@ void modify_jpsi() {
             tot_p = sqrt(scatteredElectron_rc.Pt()*scatteredElectron_rc.Pt() + scatteredElectron_rc.Pz()*scatteredElectron_rc.Pz());
             Ecal_vs_pz->Fill(maxEnergy / tot_p);
             
-            //------------acceptance----------------------------------------
-            q2_acc = q2;
-            q2_e_acc = q2_e;
-            q2_JB_acc = q2_JB;
-            rap_acc = rap;
-            y_JB_acc = y_JB;
-            y_eSig_acc = y_eSig;
-            t_another_acc = t_another;
-            
-            ixba = q2 / (2.0 * incbeam.Dot(incbeame - scatteredElectron_rc));
-            
-            JB_x_acc->Fill(x_JB);
-            eSig_x_acc->Fill(x_Sig);
-            
-            rcJPsiMassa->Fill(JPsi1_cor.M());
-            
-            
-            mtq_acc->Fill(q2_acc);
-            mcrapida->Fill(rap_acc);
-            if (y_JB_acc > 0.1 && y_JB_acc < 1) JB_y_MC_a->Fill(y_JB_acc);
-            if (y_eSig_acc > 0.1 && y_eSig_acc < 1) eSig_y_MC_a->Fill(y_eSig_acc);
-            if (q2_JB_acc > 1 && q2_JB_acc < 10) JB_q2_acc->Fill(q2_JB_acc);
-            if (q2_e_acc > 1 && q2_JB_acc < 10) eSig_q2_acc->Fill(q2_e_acc);
-            
-            xba->Fill(ixba);
-            t_anotherhist_acc->Fill(t_another_acc);
-            //--------------------------------------------------------------
-            
-            //-------------RP t------------------------------
-            diff_rp = incbeam - vec5;
-            if (iflagproton == 1 ) {
-                t_accept1 = -1*diff_forRP_acc.Dot(diff_forRP_acc);//for MC;// for acceptance
-                if (t_accept1 > 0)mtgg_accept->Fill(t_accept1);
-                
-                if (t_accept1 != 0) t1 = - (t3 / t_accept1) * diff_rp.Mag2();//correlation factor applied
-                //t1 = - diff_rp.Mag2();//no correlation factor applied
-                if (t1 > 0) mtg->Fill(t1);
-                
-                
-                if (t1 > 0) mtgTot->Fill(t1);//for combined subsystems use
-                if (t1 > 0) mtggtest_rc->Fill(-1*t1);
-                if (t1 > 0) mtgTot1->Fill(t1); //for separate use, later
-                
-                // --- 2D Plot: true vs. RP-based t ---
-                if (t1 > 0) t_2D->Fill(t3, t1);
-                if (t1 > 0) two_meth_tdist->Fill(t1);
-                if (t1 > 0) t2D_with_diff_rp->Fill(t3, t1);
-                if (t1 > 0) t2D_with_diff_allCroll->Fill(t3, t1);
-            }
-            //------------------------------------------------
-            //--------------------B0-only |t|-----------------
-            // Acceptance-corrected t from MC
-            TLorentzVector diff_b0 = incbeam - vec4;
-            if (iflagproton2 == 1 ) {
-                t_accept2 = -1*diff_forB0_acc.Dot(diff_forB0_acc);//for MC;
-                if (t_accept2 > 0) mtgg_accept->Fill(t_accept2);
-                if (t_accept2 != 0) t2 = - (t3 / t_accept2) * diff_b0.Mag2(); //correlation factor applied
-                if (t2 > 0) mtgB0->Fill(t2);
-                
-                if (t2 > 0) mtgTot->Fill(t2);
-                if (t2 > 0) mtggtest_rc->Fill(-1*t2);
-                if (t2 > 0) mtgTot1->Fill(t2);
-                
-                // 2D correlation plot
-                if (t2 > 0) t_2D->Fill(t3, t2);
-                
-                if (t2 > 0) two_meth_tdist->Fill(t2);
-                if (t2 > 0) t2D_with_diff_B0->Fill(t3, t2);
-                if (t2 > 0) t2D_with_diff_allCroll->Fill(t3, t2);
-            }
-            //-------------------------------------------------------------
-            
             // Reconstructed kinematics (x_bj and x_v)
             double denom = 2.0 * incbeam.Dot(incbeame - scatteredElectron_rc);
             ixb1 = q2_1 / denom;
@@ -1126,18 +1249,10 @@ void modify_jpsi() {
             
             //--------------t_reco------------------------------------
             q2vst_acc->Fill(t_another, q2);
-            TLorentzVector pr_beam_scattered_corr_rc;
-            TLorentzVector pr_beam_scattered_rc = incbeam - (JPsi2_cor+scatteredElectron_rc-incbeame);
-            double p_Aplus_rc = pr_beam_scattered_rc.E()+pr_beam_scattered_rc.Pz();
-            double p_TAsquared_rc = (pr_beam_scattered_rc.Pt())*(pr_beam_scattered_rc.Pt());
-            double p_Aminus_rc = (incbeam.M()*incbeam.M() + p_TAsquared_rc) / p_Aplus_rc;
-            pr_beam_scattered_corr_rc.SetPxPyPzE(pr_beam_scattered_rc.Px(),pr_beam_scattered_rc.Py(),(p_Aplus_rc-p_Aminus_rc)/2, (p_Aplus_rc+p_Aminus_rc)/2);
             
-            t_another_rc = -(t_another / t_another_acc)*(incbeam - pr_beam_scattered_corr_rc).Dot(incbeam - pr_beam_scattered_corr_rc);//corrected
-            t_anotherhist_rc->Fill(t_another_rc);
-            t_another_2D->Fill(t_another, t_another_rc);
             if (iflagproton != 1 && iflagproton2 != 1) {
                 two_meth_tdist->Fill(t_another_rc);
+                if (t_another_acc > 0) two_meth_tdist_accept->Fill(t_another_acc);
                 t2D_with_diff_methL->Fill(t3, t_another_rc);
                 t2D_with_diff_allCroll->Fill(t3, t_another_rc);
             }
@@ -1173,7 +1288,27 @@ void modify_jpsi() {
                 JB_xbjk_2D->Fill(x_JB, x_JB_rc);
                 dJB_xbjk_2D->Fill(x_JB, (x_JB - x_JB_rc) / x_JB);
                 JB_q2_2D->Fill(q2_JB, q2_JB_rc);
+                
+                double hadronHalfAngle_rc = jbsig_rc / sqrt(jbpt2_rc) ;
+                double y_DA_rc = hadronHalfAngle_rc / (TMath::Tan(scatteredElectron_rc.Theta()/2.0) + hadronHalfAngle_rc);
+                if (y_DA_rc > 0.1 && y_DA_rc < 1) DA_y_RC->Fill(y_DA_rc);
+                
+                double q2_DA_rc = 4.0*incbeame.E()*incbeame.E() / ((TMath::Tan(scatteredElectron_rc.Theta()/2.0))*(TMath::Tan(scatteredElectron_rc.Theta()/2.0)) + hadronHalfAngle_rc);
+                if (q2_DA_rc > 1 && q2_DA_rc < 10) DA_q2_RC->Fill(q2_DA_rc);
+                
+                double x_DA_rc = q2_DA_rc / (4.0*incbeame.E()*incbeam.E()*y_DA_rc);
+                if (x_DA_rc > 0) DA_x_RC->Fill(x_DA_rc);
+                
+                //DA 2D plots
+                DA_x_2D->Fill(x_DA, x_DA_rc);
+                DA_q2_2D->Fill(q2_DA, q2_DA_rc);
+                DA_y_2D->Fill(y_DA, y_DA_rc);
+                
+                diff_DA_q2->Fill((q2_DA - q2_DA_rc) / q2_DA);
+                diff_DA_y->Fill((y_DA - y_DA_rc) / y_DA);
+                diff_DA_x->Fill((x_DA - x_DA_rc) / x_DA);
             }
+            
             
             //HFS
             JB_HFS_acc->Fill(jbsig);
@@ -1183,11 +1318,11 @@ void modify_jpsi() {
                 JB_pt2_rc->Fill(sqrt((vec4 + decayElectron_rc + positron_rc).Px()*(vec4 + decayElectron_rc + positron_rc).Px() + (vec4 + decayElectron_rc + positron_rc).Py()*(vec4 + decayElectron_rc + positron_rc).Py()));
                 JB_HFS_2D->Fill(jbsig,hfsjb2);
                 
-                    auto totalVec = decayElectron_rc + positron_rc + scatteredElectron_rc + vec4;
-                    double eMinusPz = totalVec.E() - totalVec.Pz();
-                    if (eMinusPz > 15 && eMinusPz < 25) {
-                        rcjpsie_e_minus_pz->Fill(eMinusPz);
-                    }
+                auto totalVec = decayElectron_rc + positron_rc + scatteredElectron_rc + vec4;
+                double eMinusPz = totalVec.E() - totalVec.Pz();
+                if (eMinusPz > 15 && eMinusPz < 25) {
+                    rcjpsie_e_minus_pz->Fill(eMinusPz);
+                }
                 
             }
             JB_pt2_acc->Fill(sqrt(jbpt2));
@@ -1342,6 +1477,8 @@ void modify_jpsi() {
     mtggtest_rc->Write();
     t_anotherhist_neg->Write();
     t_anotherhist->Write();
+    t_anotherhist_rc->Write();
+    t_anotherhist_acc->Write();
     
     //outputFile->Close();
     
@@ -1357,28 +1494,22 @@ void modify_jpsi() {
     fProton->Draw();
     
     // Overlay RECO proton tracks from RP
-    RPfProton->SetFillStyle(3002);
-    RPfProton->SetFillColor(kRed);
-    RPfProton->SetMarkerStyle(8);
-    RPfProton->SetMarkerColor(kRed);
+    RPfProton->SetLineColor(kRed);
     RPfProton->SetLineWidth(0);
-    RPfProton->Draw("CP SAME");
+    RPfProton->Draw("SAME");
     
     // Overlay RECO proton tracks from B0
-    B0fProton->SetFillStyle(3002);
-    B0fProton->SetFillColor(kBlue);
-    B0fProton->SetMarkerStyle(41);
-    B0fProton->SetMarkerColor(kBlue);
+    B0fProton->SetLineColor(kBlue);
     B0fProton->SetLineWidth(0);
-    B0fProton->Draw("CP SAME");
+    B0fProton->Draw("SAME");
     
     // Add legend
     TLegend *leg = new TLegend(0.55, 0.5, 0.85, 0.65);
     leg->SetBorderSize(0);
     leg->SetFillStyle(0);
     leg->AddEntry(fProton, "p' MC", "l");
-    leg->AddEntry(RPfProton, "p' RECO track - RP", "p kFullDotLarge");
-    leg->AddEntry(B0fProton, "p' RECO track - B0", "p kFullFourTrianglesX");
+    leg->AddEntry(RPfProton, "p' RECO track - RP", "l");
+    leg->AddEntry(B0fProton, "p' RECO track - B0", "l");
     leg->Draw();
     
     TLegend *label0 = new TLegend(0.5, 0.7, 0.89, 0.8);
@@ -1401,19 +1532,16 @@ void modify_jpsi() {
     fProton->Draw();
     
     // Overlay RECO track (RP + B0)
-    B0RPfProton->SetFillStyle(3002);
-    B0RPfProton->SetFillColor(kMagenta);
-    B0RPfProton->SetMarkerStyle(43);
-    B0RPfProton->SetMarkerColor(kMagenta);
-    B0RPfProton->SetLineWidth(0);
-    B0RPfProton->Draw("CP SAME");
+    B0RPfProton->SetLineColor(kRed);
+    B0RPfProton->SetLineWidth(4);
+    B0RPfProton->Draw("SAME");
     
     // Main legend
     TLegend *legt = new TLegend(0.55, 0.5, 0.85, 0.65);
     legt->SetBorderSize(0);
     legt->SetFillStyle(0);
     legt->AddEntry(fProton, "p' MC", "l");
-    legt->AddEntry(B0RPfProton, "p' RECO track - RP + B0", "p KFullDoubleDiamond");
+    legt->AddEntry(B0RPfProton, "p' RECO track - RP + B0", "l");
     legt->Draw();
     
     // Context/label legend
@@ -1499,18 +1627,12 @@ void modify_jpsi() {
     JPsiMass1->Draw();
     
     // Acceptance
-    rcJPsiMassa->SetFillStyle(3002);
-    rcJPsiMassa->SetFillColor(kBlue);
-    rcJPsiMassa->SetMarkerStyle(45);
-    rcJPsiMassa->SetMarkerColor(kBlue);
+    rcJPsiMassa->SetLineColor(kBlue);
     rcJPsiMassa->SetLineWidth(0);
     rcJPsiMassa->Draw("CP SAME");
     
     // Reco track
-    rcJPsiMass1->SetFillStyle(3002);
-    rcJPsiMass1->SetFillColor(kRed);
-    rcJPsiMass1->SetMarkerStyle(8);
-    rcJPsiMass1->SetMarkerColor(kRed);
+    rcJPsiMass1->SetLineColor(kRed);
     rcJPsiMass1->SetLineWidth(0);
     rcJPsiMass1->Draw("CP SAME");
     
@@ -1519,8 +1641,8 @@ void modify_jpsi() {
     jpsi_MCReco->SetBorderSize(0);
     jpsi_MCReco->SetFillStyle(0);
     jpsi_MCReco->AddEntry(JPsiMass1, "MC", "l");
-    jpsi_MCReco->AddEntry(rcJPsiMassa, "Acceptance", "p f");
-    jpsi_MCReco->AddEntry(rcJPsiMass1, "RECO track", "p f");
+    jpsi_MCReco->AddEntry(rcJPsiMassa, "Acceptance", "l");
+    jpsi_MCReco->AddEntry(rcJPsiMass1, "RECO track", "l");
     jpsi_MCReco->Draw();
     
     // Label for context
@@ -1559,16 +1681,12 @@ void modify_jpsi() {
     mtgg->Draw("HIST");
     
     // RECO RP
-    mtg->SetFillStyle(3002);
-    mtg->SetFillColor(kRed + 1);
     mtg->SetMarkerStyle(8);
     mtg->SetMarkerColor(kRed + 1);
     mtg->SetLineWidth(0);
     mtg->Draw("CP SAME");
     
     // RECO B0
-    mtgB0->SetFillStyle(3002);
-    mtgB0->SetFillColor(kBlue + 1);
     mtgB0->SetMarkerStyle(41);
     mtgB0->SetMarkerColor(kBlue + 1);
     mtgB0->SetLineWidth(0);
@@ -1621,8 +1739,6 @@ void modify_jpsi() {
     mtgg->SetLineWidth(4);
     mtgg->Draw("HIST");
     
-    mtgTot->SetFillStyle(3002);
-    mtgTot->SetFillColor(kMagenta);
     mtgTot->SetMarkerStyle(43);
     mtgTot->SetMarkerColor(kMagenta);
     mtgTot->SetLineWidth(0);
@@ -1667,8 +1783,6 @@ void modify_jpsi() {
     mtgg_accept->SetLineWidth(2);
     mtgg_accept->Draw("LP SAME");
     
-    mtgTot->SetFillStyle(3002);
-    mtgTot->SetFillColor(kMagenta);
     mtgTot->SetMarkerStyle(43);
     mtgTot->SetMarkerColor(kMagenta);
     mtgTot->SetLineWidth(0);
@@ -1696,18 +1810,15 @@ void modify_jpsi() {
     h6_pt_MC->SetLineWidth(4);
     h6_pt_MC->Draw(" HIST");
     
-    h_pt_B0RomanPots->SetFillStyle(3002);
-    h_pt_B0RomanPots->SetFillColor(kMagenta);
-    h_pt_B0RomanPots->SetMarkerStyle(43);
-    h_pt_B0RomanPots->SetMarkerColor(kMagenta);
+    h_pt_B0RomanPots->SetLineColor(kMagenta);
     h_pt_B0RomanPots->SetLineWidth(0);
-    h_pt_B0RomanPots->Draw("CP SAME");
+    h_pt_B0RomanPots->Draw("SAME");
     
     TLegend *leg5t = new TLegend(0.55, 0.55, 0.87, 0.68);
     leg5t->SetBorderSize(0);
     leg5t->SetFillStyle(0);
     leg5t->AddEntry(h6_pt_MC, "p' MC", "l");
-    leg5t->AddEntry(h_pt_B0RomanPots, "p' RECO - RP + B0", "p f");
+    leg5t->AddEntry(h_pt_B0RomanPots, "p' RECO - RP + B0", "l");
     leg5t->Draw();
     
     TLegend *label3t = new TLegend(0.5, 0.7, 0.89, 0.82);
@@ -1758,8 +1869,6 @@ void modify_jpsi() {
     
     rcPositronpt->SetMarkerStyle(8);
     rcPositronpt->SetMarkerColor(kRed);
-    rcPositronpt->SetFillStyle(3002);
-    rcPositronpt->SetFillColor(46);
     rcPositronpt->SetLineWidth(0);
     rcPositronpt->Draw("CP SAME");
     
@@ -1788,8 +1897,6 @@ void modify_jpsi() {
     
     rcElectronjpsipt->SetMarkerStyle(8);
     rcElectronjpsipt->SetMarkerColor(kRed);
-    rcElectronjpsipt->SetFillStyle(3002);
-    rcElectronjpsipt->SetFillColor(46);
     rcElectronjpsipt->SetLineWidth(0);
     rcElectronjpsipt->Draw("CP SAME");
     
@@ -1818,8 +1925,6 @@ void modify_jpsi() {
     
     rcElectronpt->SetMarkerStyle(8);
     rcElectronpt->SetMarkerColor(kRed);
-    rcElectronpt->SetFillStyle(3002);
-    rcElectronpt->SetFillColor(46);
     rcElectronpt->SetLineWidth(0);
     rcElectronpt->Draw("CP SAME");
     
@@ -1846,8 +1951,6 @@ void modify_jpsi() {
     
     rcPositron->SetMarkerStyle(8);
     rcPositron->SetMarkerColor(kRed);
-    rcPositron->SetFillStyle(3002);
-    rcPositron->SetFillColor(46);
     rcPositron->SetLineWidth(0);
     rcPositron->Draw("CP SAME");
     
@@ -1876,8 +1979,6 @@ void modify_jpsi() {
     
     rcElectronjpsieta->SetMarkerStyle(8);
     rcElectronjpsieta->SetMarkerColor(kRed);
-    rcElectronjpsieta->SetFillStyle(3002);
-    rcElectronjpsieta->SetFillColor(46);
     rcElectronjpsieta->SetLineWidth(0);
     rcElectronjpsieta->Draw("CP SAME");
     
@@ -1905,8 +2006,6 @@ void modify_jpsi() {
     
     rcElectron->SetMarkerStyle(8);
     rcElectron->SetMarkerColor(kRed);
-    rcElectron->SetFillStyle(3002);
-    rcElectron->SetFillColor(46);
     rcElectron->SetLineWidth(0);
     rcElectron->Draw("CP SAME");
     
@@ -1927,20 +2026,20 @@ void modify_jpsi() {
     q_sq->cd(1)->SetLogy();
     
     // Create and draw ratio plot (RECO / MC)
-    TRatioPlot* rp3 = new TRatioPlot(mtqq, mtq, "pois");
-    rp3->Draw();
-    
-    // Configure the lower pad (ratio)
-    rp3->GetLowerPad()->cd();
-    rp3->SetSeparationMargin(0);
-    rp3->GetLowerRefYaxis()->SetTitle("Ratio");
-    rp3->GetLowerRefGraph()->SetMinimum(0.6);
-    rp3->GetLowerRefGraph()->SetMaximum(1.2);
-    rp3->GetLowerRefGraph()->SetMarkerStyle(8);
-    rp3->GetLowerRefGraph()->SetMarkerColor(2);
-    
-    // Configure the upper pad (main plots)
-    rp3->GetUpperPad()->cd();
+    /*TRatioPlot* rp3 = new TRatioPlot(mtqq, mtq, "pois");
+     rp3->Draw();
+     
+     // Configure the lower pad (ratio)
+     rp3->GetLowerPad()->cd();
+     rp3->SetSeparationMargin(0);
+     rp3->GetLowerRefYaxis()->SetTitle("Ratio");
+     rp3->GetLowerRefGraph()->SetMinimum(0.6);
+     rp3->GetLowerRefGraph()->SetMaximum(1.2);
+     rp3->GetLowerRefGraph()->SetMarkerStyle(8);
+     rp3->GetLowerRefGraph()->SetMarkerColor(2);
+     
+     // Configure the upper pad (main plots)
+     rp3->GetUpperPad()->cd();*/
     
     // MC curve
     mtq->SetStats(0);
@@ -1953,40 +2052,35 @@ void modify_jpsi() {
     
     // Inclusive curve
     EM_Q2->SetStats(0);
-    EM_Q2->SetLineColor(6);
+    EM_Q2->SetLineColor(kViolet);
     EM_Q2->SetLineWidth(4);
-    EM_Q2->Draw("CP SAME");
+    EM_Q2->Draw("SAME");
     
     // RECO track (primary)
     mtqq->SetStats(0);
-    mtqq->SetFillStyle(3002);
-    mtqq->SetFillColor(46);
-    mtqq->SetMarkerStyle(8);
-    mtqq->SetMarkerColor(2);
-    mtqq->SetLineWidth(0);
-    mtqq->Draw("CP SAME");
+    mtqq->SetLineColor(kRed);
+    mtqq->SetLineWidth(4);
+    mtqq->Draw("SAME");
     
     // RECO from EEMC
     mtqq_2->SetStats(0);
-    mtqq_2->SetMarkerStyle(45);
-    mtqq_2->SetMarkerColor(8);
-    mtqq_2->SetLineWidth(0);
-    mtqq_2->Draw("CP SAME");
+    mtqq_2->SetLineColor(kOrange);
+    mtqq_2->SetLineWidth(4);
+    mtqq_2->Draw("SAME");
     
     // acceptance
     mtq_acc->SetStats(0);
-    mtq_acc->SetMarkerStyle(47);
-    mtq_acc->SetMarkerColor(4);
-    mtq_acc->SetLineWidth(0);
+    mtq_acc->SetLineColor(kBlue);
+    mtq_acc->SetLineWidth(4);
     mtq_acc->Draw("CP SAME");
     
     // Add legend for plot elements
     TLegend *qq2 = new TLegend(0.55, 0.55, 0.8, 0.65);
     qq2->SetBorderSize(0);
     qq2->AddEntry(mtq, "MC", "l");
-    qq2->AddEntry(mtq_acc, "Accept", "p");
-    qq2->AddEntry(mtqq, "RECO track", "pf ");
-    qq2->AddEntry(mtqq_2, "EEMC", "p");
+    qq2->AddEntry(mtq_acc, "Accept", "l");
+    qq2->AddEntry(mtqq, "RECO track", "l");
+    qq2->AddEntry(mtqq_2, "EEMC", "l");
     qq2->AddEntry(EM_Q2, "Inclusive", "l");
     qq2->Draw();
     
@@ -2006,19 +2100,19 @@ void modify_jpsi() {
     xbjk->cd(1)->SetLogy();
     
     // Create and draw ratio plot (RECO / MC)
-    TRatioPlot* rp1 = new TRatioPlot(xb1, xb, "pois");
-    rp1->Draw();
-    
-    // Configure lower pad (ratio)
-    rp1->SetSeparationMargin(0.0);
-    rp1->GetLowerRefYaxis()->SetTitle("Ratio");
-    rp1->GetLowerRefGraph()->SetMinimum(0);
-    rp1->GetLowerRefGraph()->SetMaximum(1.5);
-    rp1->GetLowerRefGraph()->SetMarkerStyle(8);
-    rp1->GetLowerRefGraph()->SetMarkerColor(2);
-    
-    // Configure upper pad (main plot)
-    rp1->GetUpperPad()->cd();
+    /*TRatioPlot* rp1 = new TRatioPlot(xb1, xb, "pois");
+     rp1->Draw();
+     
+     // Configure lower pad (ratio)
+     rp1->SetSeparationMargin(0.0);
+     rp1->GetLowerRefYaxis()->SetTitle("Ratio");
+     rp1->GetLowerRefGraph()->SetMinimum(0);
+     rp1->GetLowerRefGraph()->SetMaximum(1.5);
+     rp1->GetLowerRefGraph()->SetMarkerStyle(8);
+     rp1->GetLowerRefGraph()->SetMarkerColor(2);
+     
+     // Configure upper pad (main plot)
+     rp1->GetUpperPad()->cd();*/
     
     // MC curve
     xb->SetStats(0);
@@ -2034,28 +2128,25 @@ void modify_jpsi() {
     EM_x->SetStats(0);
     EM_x->SetLineColor(6);
     EM_x->SetLineWidth(4);
-    EM_x->Draw("CP SAME");
+    EM_x->Draw("SAME");
     
     xba->SetStats(0);
     xba->SetLineColor(4);
     xba->SetLineWidth(4);
-    xba->Draw("CP SAME");
+    xba->Draw("SAME");
     
     // RECO curve
     xb1->SetStats(0);
-    xb1->SetFillStyle(3002);
-    xb1->SetFillColor(46);
-    xb1->SetMarkerStyle(8);
-    xb1->SetMarkerColor(2);
-    xb1->SetLineWidth(0);
-    xb1->Draw("CP SAME");
+    xb1->SetLineColor(kRed);
+    xb1->SetLineWidth(4);
+    xb1->Draw("SAME");
     
     // Legend for plot components
     TLegend *xbjkk = new TLegend(0.55, 0.55, 0.8, 0.65);
     xbjkk->SetBorderSize(0);
     xbjkk->AddEntry(xb, "MC", "l");
     xbjkk->AddEntry(xba, "Accept", "l");
-    xbjkk->AddEntry(xb1, "RECO track", "p f");
+    xbjkk->AddEntry(xb1, "RECO track", "l");
     xbjkk->AddEntry(EM_x, "Inclusive", "l");
     xbjkk->Draw();
     
@@ -2101,19 +2192,17 @@ void modify_jpsi() {
     
     // RECO curve
     xv1->SetStats(0);
-    xv1->SetFillStyle(3002);
-    xv1->SetFillColor(46);
     xv1->SetMarkerStyle(8);
     xv1->SetMarkerColor(2);
     xv1->SetLineWidth(0);
     xv1->Draw("CP SAME");
     
-     // Optional: Add second RECO source (e.g., EEMC or acceptance)
-     xv2->SetStats(0);
-     xv2->SetMarkerStyle(45);
-     xv2->SetMarkerColor(4);
-     xv2->SetLineWidth(0);
-     xv2->Draw("CP SAME");
+    // Optional: Add second RECO source (e.g., EEMC or acceptance)
+    xv2->SetStats(0);
+    xv2->SetMarkerStyle(45);
+    xv2->SetMarkerColor(4);
+    xv2->SetLineWidth(0);
+    xv2->Draw("CP SAME");
     
     // Legend for components
     TLegend *xvv = new TLegend(0.55, 0.55, 0.8, 0.65);
@@ -2141,13 +2230,10 @@ void modify_jpsi() {
     // ---------- Subpad 1: J/ψ mass resolution ----------
     resolution->cd(1);
     diffjpsimass->GetXaxis()->SetRangeUser(-1, 1);
-    diffjpsimass->SetMarkerStyle(8);
-    diffjpsimass->SetMarkerColor(2);
-    diffjpsimass->SetFillStyle(3002);
-    diffjpsimass->SetFillColor(46);
+    diffjpsimass->SetLineColor(kRed);;
     diffjpsimass->SetStats(0);
-    diffjpsimass->SetLineWidth(0);
-    diffjpsimass->Draw("CP");
+    diffjpsimass->SetLineWidth(4);
+    diffjpsimass->Draw();
     
     // Legend for J/ψ mass
     TLegend *legend_mass = new TLegend(0.6, 0.4, 0.7, 0.5);
@@ -2171,17 +2257,22 @@ void modify_jpsi() {
     diffq2->SetLineColor(1);
     diffq2->SetLineWidth(4);
     diffq2->SetStats(0);
-    diffq2->Draw("CP");
+    diffq2->Draw();
     
-    diff_eSig_q2->SetLineColor(2);
+    diff_eSig_q2->SetLineColor(kRed);
     diff_eSig_q2->SetLineWidth(4);
     diff_eSig_q2->SetStats(0);
-    diff_eSig_q2->Draw("CP SAME");
+    diff_eSig_q2->Draw("SAME");
     
-    diff_JB_q2->SetLineColor(4);
+    diff_JB_q2->SetLineColor(kBlue);
     diff_JB_q2->SetLineWidth(4);
     diff_JB_q2->SetStats(0);
-    diff_JB_q2->Draw("CP SAME");
+    diff_JB_q2->Draw("SAME");
+    
+    diff_DA_q2->SetLineColor(kGray);
+    diff_DA_q2->SetLineWidth(4);
+    diff_DA_q2->SetStats(0);
+    diff_DA_q2->Draw("SAME");
     
     // Legend for Q²
     TLegend *legend_q2 = new TLegend(0.6, 0.5, 0.85, 0.6);
@@ -2189,6 +2280,7 @@ void modify_jpsi() {
     legend_q2->AddEntry(diffq2, "E Method", "l");
     legend_q2->AddEntry(diff_eSig_q2, "e#Sigma Method", "l");
     legend_q2->AddEntry(diff_JB_q2, "JB Method", "l");
+    legend_q2->AddEntry(diff_DA_q2, "DA Method", "l");
     legend_q2->Draw();
     
     // Label
@@ -2209,15 +2301,20 @@ void modify_jpsi() {
     diffy->SetStats(0);
     diffy->Draw("CP");
     
-    diff_eSig_y->SetLineColor(2);
+    diff_eSig_y->SetLineColor(kRed);
     diff_eSig_y->SetLineWidth(4);
     diff_eSig_y->SetStats(0);
     diff_eSig_y->Draw("CP SAME");
     
-    diff_JB_y->SetLineColor(4);
+    diff_JB_y->SetLineColor(kBlue);
     diff_JB_y->SetLineWidth(4);
     diff_JB_y->SetStats(0);
     diff_JB_y->Draw("CP SAME");
+    
+    diff_DA_y->SetLineColor(kGray);
+    diff_DA_y->SetLineWidth(4);
+    diff_DA_y->SetStats(0);
+    diff_DA_y->Draw("CP SAME");
     
     // Legend for y
     TLegend *legend_y = new TLegend(0.6, 0.5, 0.85, 0.6);
@@ -2225,6 +2322,7 @@ void modify_jpsi() {
     legend_y->AddEntry(diffy, "E Method", "l");
     legend_y->AddEntry(diff_eSig_y, "e#Sigma Method", "l");
     legend_y->AddEntry(diff_JB_y, "JB Method", "l");
+    legend_y->AddEntry(diff_DA_y, "DA Method", "l");
     legend_y->Draw();
     
     // Label
@@ -2245,15 +2343,20 @@ void modify_jpsi() {
     diffxbjk->SetStats(0);
     diffxbjk->Draw("CP");
     
-    diff_eSig_xbjk->SetLineColor(2);
+    diff_eSig_xbjk->SetLineColor(kRed);
     diff_eSig_xbjk->SetLineWidth(4);
     diff_eSig_xbjk->SetStats(0);
     diff_eSig_xbjk->Draw("CP SAME");
     
-    diff_JB_xbjk->SetLineColor(4);
+    diff_JB_xbjk->SetLineColor(kBlue);
     diff_JB_xbjk->SetLineWidth(4);
     diff_JB_xbjk->SetStats(0);
     diff_JB_xbjk->Draw("CP SAME");
+    
+    diff_DA_x->SetLineColor(kGray);
+    diff_DA_x->SetLineWidth(4);
+    diff_DA_x->SetStats(0);
+    diff_DA_x->Draw("CP SAME");
     
     // Legend for x_{Bj}
     TLegend *legend_xbj = new TLegend(0.6, 0.5, 0.85, 0.6);
@@ -2261,6 +2364,7 @@ void modify_jpsi() {
     legend_xbj->AddEntry(diffxbjk, "E Method", "l");
     legend_xbj->AddEntry(diff_eSig_xbjk, "e#Sigma Method", "l");
     legend_xbj->AddEntry(diff_JB_xbjk, "JB Method", "l");
+    legend_xbj->AddEntry(diff_DA_x, "DA Method", "l");
     legend_xbj->Draw();
     
     // Label
@@ -2283,21 +2387,18 @@ void modify_jpsi() {
     mcjpsie_e_minus_pzmc->GetYaxis()->SetTitleSize(0.03);
     mcjpsie_e_minus_pzmc->SetStats(0);
     mcjpsie_e_minus_pzmc->SetLineColor(1);
-    mcjpsie_e_minus_pzmc->SetLineWidth(6);
+    mcjpsie_e_minus_pzmc->SetLineWidth(4);
     mcjpsie_e_minus_pzmc->Draw();
     
-    rcjpsie_e_minus_pz->SetMarkerStyle(8);
-    rcjpsie_e_minus_pz->SetMarkerColor(2);
-    rcjpsie_e_minus_pz->SetFillStyle(3002);
-    rcjpsie_e_minus_pz->SetFillColor(46);
+    rcjpsie_e_minus_pz->SetLineColor(kRed);
     rcjpsie_e_minus_pz->SetLineWidth(0);
-    rcjpsie_e_minus_pz->Draw("CP SAME");
+    rcjpsie_e_minus_pz->Draw("l SAME");
     
     // Legend for E - Pz
     TLegend *mceminuspz = new TLegend(0.6, 0.5, 0.87, 0.6);
     mceminuspz->SetBorderSize(0);
     mceminuspz->AddEntry(mcjpsie_e_minus_pzmc, "MC J/#psi e", "l");
-    mceminuspz->AddEntry(rcjpsie_e_minus_pz, "RECO J/#psi e", "p");
+    mceminuspz->AddEntry(rcjpsie_e_minus_pz, "RECO J/#psi e", "l");
     mceminuspz->Draw();
     
     // Info label
@@ -2365,32 +2466,27 @@ void modify_jpsi() {
     h2_e_MC->SetLineWidth(4);
     h2_e_MC->Draw();
     
-    h2_e_acc->SetMarkerStyle(47); // diamond shape
-    h2_e_acc->SetMarkerColor(4);
+    h2_e_acc->SetLineColor(kBlue);
     h2_e_acc->SetLineWidth(0);
-    h2_e_acc->Draw("CP SAME");
+    h2_e_acc->Draw("SAME");
     
     // RECO track electron energy
-    scat_e_RC->SetFillStyle(3002);
-    scat_e_RC->SetFillColor(46);
-    scat_e_RC->SetMarkerStyle(8);
-    scat_e_RC->SetMarkerColor(2);
+    scat_e_RC->SetLineColor(kBlue);
     scat_e_RC->SetLineWidth(0);
-    scat_e_RC->Draw("CP SAME");
+    scat_e_RC->Draw("SAME");
     
     // EEMC-detected electron energy
-    scat_e_EcalEnd->SetMarkerStyle(45); // diamond shape
-    scat_e_EcalEnd->SetMarkerColor(8);
+    scat_e_EcalEnd->SetLineColor(kViolet);
     scat_e_EcalEnd->SetLineWidth(0);
-    scat_e_EcalEnd->Draw("CP SAME");
+    scat_e_EcalEnd->Draw("SAME");
     
     // Legend for energy sources
     TLegend *e_MC_RC_EcalEnd = new TLegend(0.2, 0.55, 0.6, 0.68);
     e_MC_RC_EcalEnd->SetBorderSize(0);
     e_MC_RC_EcalEnd->AddEntry(h2_e_MC, "e' MC", "l");
-    e_MC_RC_EcalEnd->AddEntry(h2_e_acc, "e' Accept", "p");
-    e_MC_RC_EcalEnd->AddEntry(scat_e_RC, "e' RECO track", "p");
-    e_MC_RC_EcalEnd->AddEntry(scat_e_EcalEnd, "e' EEMC", "p");
+    e_MC_RC_EcalEnd->AddEntry(h2_e_acc, "e' Accept", "l");
+    e_MC_RC_EcalEnd->AddEntry(scat_e_RC, "e' RECO track", "l");
+    e_MC_RC_EcalEnd->AddEntry(scat_e_EcalEnd, "e' EEMC", "l");
     e_MC_RC_EcalEnd->Draw();
     
     // Label for configuration
@@ -2420,11 +2516,11 @@ void modify_jpsi() {
     e_pz_MC->SetLineWidth(4);
     e_pz_MC->Draw();
     
-    e_pz_acc->SetLineColor(4);
+    e_pz_acc->SetLineColor(kBlue);
     e_pz_acc->SetLineWidth(4);
     e_pz_acc->Draw("Same");
     
-    e_pz_rc->SetLineColor(2);
+    e_pz_rc->SetLineColor(kRed);
     e_pz_rc->SetLineWidth(4);
     e_pz_rc->Draw("Same");
     
@@ -2442,6 +2538,128 @@ void modify_jpsi() {
     e_pz_2D->GetXaxis()->SetTitle("E/p_{z} (MC)");
     e_pz_2D->GetYaxis()->SetTitle("E/p_{z} (RECO)");
     e_pz_2D->Draw("COLZ");
+    
+    //-----------------------------
+    TCanvas *DA_MC_plot = new TCanvas("DA_MC_plot", "DA_MC_plot", 1400, 1000);
+    DA_MC_plot->Divide(3, 2);
+    
+    // Panel 1: JB x ratio
+    DA_MC_plot->cd(1)->SetLogy();
+    DA_x_MC->SetLineColor(kBlack);
+    DA_x_MC->SetLineWidth(2);
+    DA_x_MC->SetStats(0);
+    DA_x_MC->GetXaxis()->SetTitle("x_{bj}");
+    DA_x_MC->Draw();
+    
+    DA_x_acc->SetLineColor(4);
+    DA_x_acc->SetLineWidth(2);
+    DA_x_acc->SetStats(0);
+    DA_x_acc->Draw("SAME");
+    
+    DA_x_in->SetLineColor(kMagenta + 2);
+    DA_x_in->SetLineWidth(2);
+    DA_x_in->SetStats(0);
+    DA_x_in->Draw("SAME");
+    
+    DA_x_RC->SetLineColor(kRed);
+    DA_x_RC->SetLineWidth(2);
+    DA_x_RC->SetStats(0);
+    DA_x_RC->Draw("SAME");
+    
+    TLegend *legDA_x = new TLegend(0.4, 0.65, 0.89, 0.87);
+    legDA_x->SetBorderSize(0);
+    legDA_x->AddEntry(DA_x_MC, "x_{DA} MC", "l");
+    legDA_x->AddEntry(DA_x_acc, "Accept", "l");
+    legDA_x->AddEntry(DA_x_RC, "x_{DA} Reco", "l");
+    legDA_x->AddEntry(DA_x_in, "Inclusive", "l");
+    legDA_x->AddEntry("", "", "");
+    legDA_x->AddEntry("", "x = #frac{Q^{2}}{4E_{e}E_{p}y}", "");
+    legDA_x->Draw();
+    
+    // Panel 2: JB Q^2 ratio
+    DA_MC_plot->cd(2)->SetLogy();
+    DA_q2_MC->SetLineColor(kBlack);
+    DA_q2_MC->SetLineWidth(2);
+    DA_q2_MC->SetStats(0);
+    DA_q2_MC->GetXaxis()->SetTitle("Q^{2} [GeV^{2}]");
+    DA_q2_MC->Draw();
+    
+    DA_Q2_in->SetLineColor(kMagenta + 2);
+    DA_Q2_in->SetLineWidth(2);
+    DA_Q2_in->SetStats(0);
+    DA_Q2_in->Draw("SAME");
+    
+    DA_q2_RC->SetLineColor(kRed);
+    DA_q2_RC->SetLineWidth(4);
+    DA_q2_RC->SetStats(0);
+    DA_q2_RC->Draw("SAME");
+    
+    DA_q2_acc->SetLineColor(4);
+    DA_q2_acc->SetLineWidth(2);
+    DA_q2_acc->SetStats(0);
+    DA_q2_acc->Draw("SAME");
+    
+    TLegend *legDA_q2 = new TLegend(0.4, 0.65, 0.89, 0.87);
+    legDA_q2->SetBorderSize(0);
+    legDA_q2->AddEntry(DA_q2_MC, "Q^{2}_{DA} MC", "l");
+    legDA_q2->AddEntry(DA_q2_acc, "Q^{2}_{DA} Accept", "l");
+    legDA_q2->AddEntry(DA_q2_RC, "Q^{2}_{DA} Reco", "l");
+    legDA_q2->AddEntry(DA_Q2_in, "Inclusive", "l");
+    legDA_q2->AddEntry("", "", "");
+    legDA_q2->AddEntry("", "Q^{2} = #frac{4E_{e}^{2}}{tan^{2}(#theta/2) + #Sigma/p_{T,h}}", "");
+    legDA_q2->Draw();
+    
+    // Panel 3: JB y comparison
+    DA_MC_plot->cd(3)->SetLogy();
+    DA_y_MC->SetLineColor(kBlack);
+    DA_y_MC->SetLineWidth(2);
+    DA_y_MC->SetStats(0);
+    DA_y_MC->GetXaxis()->SetTitle("y");
+    DA_y_MC->Draw();
+    
+    DA_y_MC_a->SetLineColor(kBlue);
+    DA_y_MC_a->SetLineWidth(2);
+    DA_y_MC_a->SetStats(0);
+    DA_y_MC_a->Draw("SAME");
+    
+    DA_y_in->SetLineColor(kMagenta + 2);
+    DA_y_in->SetLineWidth(2);
+    DA_y_in->SetStats(0);
+    DA_y_in->Draw("SAME");
+    
+    DA_y_RC->SetLineColor(kRed);
+    DA_y_RC->SetLineWidth(2);
+    DA_y_RC->SetStats(0);
+    DA_y_RC->Draw("SAME");
+    
+    TLegend *legDA_y = new TLegend(0.4, 0.65, 0.89, 0.87);
+    legDA_y->SetBorderSize(0);
+    legDA_y->AddEntry(DA_y_MC, "y_{DA} MC", "l");
+    legDA_y->AddEntry(DA_y_MC_a, "y_{DA} Accept", "l");
+    legDA_y->AddEntry(DA_y_RC, "y_{DA} Reco", "l");
+    legDA_y->AddEntry(DA_y_in, "Inclusive", "l");
+    legDA_y->AddEntry("", "", "");
+    legDA_y->AddEntry("", "y = #frac{#Sigma / p_{T,h}}{tan(#theta/2) + #Sigma / p_{T,h}}", "");
+    legDA_y->Draw();
+    
+    DA_MC_plot->cd(4);
+    DA_x_2D->SetStats(0);
+    DA_x_2D->GetXaxis()->SetTitle("x_{bj} (MC)");
+    DA_x_2D->GetYaxis()->SetTitle("x_{bj} (RECO)");
+    DA_x_2D->Draw("COLZ");
+    
+    DA_MC_plot->cd(5);
+    DA_q2_2D->SetStats(0);
+    DA_q2_2D->GetXaxis()->SetTitle("Q^{2} (MC) [GeV^{2}]");
+    DA_q2_2D->GetYaxis()->SetTitle("Q^{2} (RECO) [GeV^{2}]");
+    DA_q2_2D->Draw("COLZ");
+    
+    DA_MC_plot->cd(6);
+    DA_y_2D->SetStats(0);
+    DA_y_2D->GetXaxis()->SetTitle("y (MC)");
+    DA_y_2D->GetYaxis()->SetTitle("y (RECO)");
+    DA_y_2D->Draw("COLZ");
+    //---------------------------------
     
     TCanvas *JB_MC_plot = new TCanvas("JB_MC_plot", "JB_MC_plot", 1400, 1000);
     JB_MC_plot->Divide(4, 3);
@@ -2527,24 +2745,24 @@ void modify_jpsi() {
     
     // Panel 4: JB Q^2 ratio
     JB_MC_plot->cd(4)->SetLogy();
-    TRatioPlot* ratio_Q2 = new TRatioPlot(JB_q2_RC, JB_q2_MC, "pois");
-    ratio_Q2->Draw();
-    
-    // Lower pad (ratio)
-    ratio_Q2->GetLowerPad()->cd();
-    ratio_Q2->GetLowerRefYaxis()->SetTitle("ratio");
-    ratio_Q2->GetLowerRefGraph()->SetMinimum(0.4);
-    ratio_Q2->GetLowerRefGraph()->SetMaximum(1.5);
-    ratio_Q2->SetSeparationMargin(0);
-    ratio_Q2->GetLowerRefGraph()->SetMarkerStyle(8);
-    ratio_Q2->GetLowerRefGraph()->SetMarkerColor(kRed);
-    
-    // Upper pad (distributions)
-    ratio_Q2->GetUpperPad()->cd();
+    /*TRatioPlot* ratio_Q2 = new TRatioPlot(JB_q2_RC, JB_q2_MC, "pois");
+     ratio_Q2->Draw();
+     
+     // Lower pad (ratio)
+     ratio_Q2->GetLowerPad()->cd();
+     ratio_Q2->GetLowerRefYaxis()->SetTitle("ratio");
+     ratio_Q2->GetLowerRefGraph()->SetMinimum(0.4);
+     ratio_Q2->GetLowerRefGraph()->SetMaximum(1.5);
+     ratio_Q2->SetSeparationMargin(0);
+     ratio_Q2->GetLowerRefGraph()->SetMarkerStyle(8);
+     ratio_Q2->GetLowerRefGraph()->SetMarkerColor(kRed);
+     
+     // Upper pad (distributions)
+     ratio_Q2->GetUpperPad()->cd();*/
     JB_q2_MC->SetLineColor(kBlack);
     JB_q2_MC->SetLineWidth(4);
     JB_q2_MC->SetStats(0);
-    JB_q2_MC->GetXaxis()->SetTitle("Q^{2}");
+    JB_q2_MC->GetXaxis()->SetTitle("Q^{2} [GeV^{2}]");
     JB_q2_MC->Draw();
     
     JB_Q2_in->SetLineColor(kMagenta + 2);
@@ -2574,24 +2792,24 @@ void modify_jpsi() {
     
     // Panel 5: JB x ratio
     JB_MC_plot->cd(5)->SetLogy();
-    TRatioPlot* ratio_x = new TRatioPlot(JB_x_RC, JB_x_MC, "pois");
-    ratio_x->Draw();
-    
-    // Lower pad (ratio)
-    ratio_x->GetLowerPad()->cd();
-    ratio_x->GetLowerRefYaxis()->SetTitle("ratio");
-    ratio_x->GetLowerRefGraph()->SetMinimum(0.4);
-    ratio_x->GetLowerRefGraph()->SetMaximum(1.5);
-    ratio_x->SetSeparationMargin(0);
-    ratio_x->GetLowerRefGraph()->SetMarkerStyle(8);
-    ratio_x->GetLowerRefGraph()->SetMarkerColor(kRed);
-    
-    // Upper pad (distributions)
-    ratio_x->GetUpperPad()->cd();
+    /*TRatioPlot* ratio_x = new TRatioPlot(JB_x_RC, JB_x_MC, "pois");
+     ratio_x->Draw();
+     
+     // Lower pad (ratio)
+     ratio_x->GetLowerPad()->cd();
+     ratio_x->GetLowerRefYaxis()->SetTitle("ratio");
+     ratio_x->GetLowerRefGraph()->SetMinimum(0.4);
+     ratio_x->GetLowerRefGraph()->SetMaximum(1.5);
+     ratio_x->SetSeparationMargin(0);
+     ratio_x->GetLowerRefGraph()->SetMarkerStyle(8);
+     ratio_x->GetLowerRefGraph()->SetMarkerColor(kRed);
+     
+     // Upper pad (distributions)
+     ratio_x->GetUpperPad()->cd();*/
     JB_x_MC->SetLineColor(kBlack);
     JB_x_MC->SetLineWidth(4);
     JB_x_MC->SetStats(0);
-    JB_x_MC->GetXaxis()->SetTitle("x");
+    JB_x_MC->GetXaxis()->SetTitle("x_{bj}");
     JB_x_MC->Draw();
     
     JB_x_acc->SetLineColor(4);
@@ -2702,22 +2920,22 @@ void modify_jpsi() {
     // === Canvas 2: Q^2 with ratio plot ===
     x_eSigma->cd(2)->SetLogy();
     
-    TRatioPlot *ratio_q2 = new TRatioPlot(eSig_q2_RC, eSig_q2_MC, "pois");
-    ratio_q2->Draw();
-    
-    ratio_q2->GetLowerPad()->cd();
-    ratio_q2->GetLowerRefYaxis()->SetTitle("ratio");
-    ratio_q2->GetLowerRefGraph()->SetMinimum(0.4);
-    ratio_q2->GetLowerRefGraph()->SetMaximum(1.2);
-    ratio_q2->SetSeparationMargin(0);
-    ratio_q2->GetLowerRefGraph()->SetMarkerStyle(8);
-    ratio_q2->GetLowerRefGraph()->SetMarkerColor(2);
-    
-    ratio_q2->GetUpperPad()->cd();
+    /*TRatioPlot *ratio_q2 = new TRatioPlot(eSig_q2_RC, eSig_q2_MC, "pois");
+     ratio_q2->Draw();
+     
+     ratio_q2->GetLowerPad()->cd();
+     ratio_q2->GetLowerRefYaxis()->SetTitle("ratio");
+     ratio_q2->GetLowerRefGraph()->SetMinimum(0.4);
+     ratio_q2->GetLowerRefGraph()->SetMaximum(1.2);
+     ratio_q2->SetSeparationMargin(0);
+     ratio_q2->GetLowerRefGraph()->SetMarkerStyle(8);
+     ratio_q2->GetLowerRefGraph()->SetMarkerColor(2);
+     
+     ratio_q2->GetUpperPad()->cd();*/
     eSig_q2_MC->SetLineColor(1);
     eSig_q2_MC->SetLineWidth(4);
     eSig_q2_MC->SetStats(0);
-    eSig_q2_MC->GetXaxis()->SetTitle("Q_{e}^{2}");
+    eSig_q2_MC->GetXaxis()->SetTitle("Q_{e}^{2} [GeV^{2}]");
     eSig_q2_MC->GetYaxis()->SetNdivisions(0);
     eSig_q2_MC->Draw();
     
@@ -2749,18 +2967,18 @@ void modify_jpsi() {
     // === Canvas 3: x_Sigma with ratio plot ===
     x_eSigma->cd(3)->SetLogy();
     
-    TRatioPlot *ratio_xes = new TRatioPlot(eSig_x_RC, eSig_x_MC, "pois");
-    ratio_xes->Draw();
-    
-    ratio_xes->GetLowerPad()->cd();
-    ratio_xes->GetLowerRefYaxis()->SetTitle("ratio");
-    ratio_xes->GetLowerRefGraph()->SetMinimum(0.4);
-    ratio_xes->GetLowerRefGraph()->SetMaximum(1.2);
-    ratio_xes->SetSeparationMargin(0);
-    ratio_xes->GetLowerRefGraph()->SetMarkerStyle(8);
-    ratio_xes->GetLowerRefGraph()->SetMarkerColor(2);
-    
-    ratio_xes->GetUpperPad()->cd();
+    /*TRatioPlot *ratio_xes = new TRatioPlot(eSig_x_RC, eSig_x_MC, "pois");
+     ratio_xes->Draw();
+     
+     ratio_xes->GetLowerPad()->cd();
+     ratio_xes->GetLowerRefYaxis()->SetTitle("ratio");
+     ratio_xes->GetLowerRefGraph()->SetMinimum(0.4);
+     ratio_xes->GetLowerRefGraph()->SetMaximum(1.2);
+     ratio_xes->SetSeparationMargin(0);
+     ratio_xes->GetLowerRefGraph()->SetMarkerStyle(8);
+     ratio_xes->GetLowerRefGraph()->SetMarkerColor(2);
+     
+     ratio_xes->GetUpperPad()->cd();*/
     eSig_x_MC->SetLineColor(1);
     eSig_x_MC->SetLineWidth(4);
     eSig_x_MC->SetStats(0);
@@ -2914,7 +3132,7 @@ void modify_jpsi() {
     hjpsi_eta_MC->GetXaxis()->SetRangeUser(-4.5, 5);
     hjpsi_eta_MC->GetYaxis()->SetTitleSize(0.03);
     hjpsi_eta_MC->SetLineColor(1);
-    hjpsi_eta_MC->SetLineWidth(6);
+    hjpsi_eta_MC->SetLineWidth(4);
     hjpsi_eta_MC->Draw();
     
     rcElectronjpsieta->SetFillStyle(0);
@@ -2923,7 +3141,7 @@ void modify_jpsi() {
     rcElectronjpsieta->Draw("SAME");
     
     fPositron->SetLineColor(4);
-    fPositron->SetLineWidth(6);
+    fPositron->SetLineWidth(4);
     fPositron->Draw("SAME");
     
     rcPositron->SetFillStyle(0);
@@ -2986,53 +3204,6 @@ void modify_jpsi() {
     for (int i = 1; i <= h_dsigma_dt_rscl_rc->GetNbinsX(); ++i) {
         current_integral_rc += h_dsigma_dt_rscl_rc->GetBinContent(i) * h_dsigma_dt_rscl_rc->GetBinWidth(i);
     }
-    
-    // Target cross section in barns
-    double target_sigma = 0.63928175476836346;//2.5912e-06;//0.3167;// 0.319641 µb = 319.641e-9 b
-    double scale = target_sigma / current_integral;
-    double scale_rc = target_sigma / current_integral_rc;
-    std::cout << "Scaling factor = " << scale << std::endl;
-    std::cout << "Scaling factor = " << scale_rc << std::endl;
-    std::cout << "MC #sigma = " << current_integral <<" #mu b"<< std::endl;
-    std::cout << "RECo #sigma = " << current_integral_rc <<" #mu b"<< std::endl;
-    
-    // Scale to target
-    auto h_dsigma_dt_scaled = (TH1D*)h_dsigma_dt_rscl->Clone("h_dsigma_dt_scaled");
-    h_dsigma_dt_scaled->Scale(scale);
-    auto h_dsigma_dt_scaled_rc = (TH1D*)h_dsigma_dt_rscl_rc->Clone("h_dsigma_dt_scaled_rc");
-    h_dsigma_dt_scaled_rc->Scale(scale_rc);
-    
-    h_dsigma_dt_rscl->Write();
-    h_dsigma_dt_rscl_rc->Write();
-    h_dsigma_dt_scaled->Write();
-    h_dsigma_dt_scaled_rc->Write();
-    
-    std::cout << "Entries = " << h_dsigma_dt_scaled->GetEntries() << std::endl;
-    std::cout << "Integral = " << h_dsigma_dt_scaled->Integral("width") << " #mu b" << std::endl;
-    
-    TCanvas *t_distribution_rescaled = new TCanvas("t_distribution_rescaled", "d #sigma/dt vs -t ub", 800, 800);
-    t_distribution_rescaled->SetLogy();
-    
-    h_dsigma_dt_rscl->SetStats(0);
-    h_dsigma_dt_rscl->GetYaxis()->SetRangeUser(1.0e-20, 10);
-    h_dsigma_dt_rscl->GetXaxis()->SetRangeUser(0, 1.6);
-    h_dsigma_dt_rscl->SetLineColor(1);
-    h_dsigma_dt_rscl->SetLineWidth(3);
-    h_dsigma_dt_rscl->SetMarkerStyle(20);
-    h_dsigma_dt_rscl->SetMarkerSize(1.0);
-    
-    //h_dsigma_dt_scaled->GetXaxis()->SetRangeUser(0, 1.6);
-    h_dsigma_dt_rscl->GetXaxis()->SetTitle("Momentum Transfer, -t [GeV^{2}]");
-    h_dsigma_dt_rscl->GetYaxis()->SetTitle("d#sigma/dt [#mu b/GeV^{2}]");
-    
-    //h_dsigma_dt_rscl->SetMinimum(1e-12); // ensure visibility in log scale
-    h_dsigma_dt_rscl->Draw("HIST");
-    
-    h_dsigma_dt_rscl_rc->SetLineWidth(3);
-    h_dsigma_dt_rscl_rc->SetLineColor(2);
-    h_dsigma_dt_rscl_rc->SetMarkerStyle(20);
-    h_dsigma_dt_rscl_rc->SetMarkerSize(1.0);
-    h_dsigma_dt_rscl_rc->Draw("SAME HIST");
     
     // Compute statistical uncertainties
     for (int i = 1; i <= h_dsigma_dt->GetNbinsX(); ++i) {
@@ -3359,15 +3530,22 @@ void modify_jpsi() {
     q2vst_acc->GetYaxis()->SetTitle("Q^{2} (Accept)");
     q2vst_acc->Draw("COLZ");
     
-    
     cout << " " << endl;
+    
+    TH1D* h_CorrectionFactor = (TH1D*) mtgg->Clone("h_CorrectionFactor");
+    h_CorrectionFactor->SetTitle("Correction Factor c_f = MC / Acceptance");
+    h_CorrectionFactor->Divide(two_meth_tdist_accept);  // c_f = mc / acc
+    
+    // Step 2: apply correction → corrected = reco * c_f
+    TH1D* t_from_2_method_corrected = (TH1D*) two_meth_tdist->Clone("t_from_2_method_corrected");
+    t_from_2_method_corrected->Multiply(h_CorrectionFactor);
     
     TCanvas* t_from_2_method = new TCanvas("t_from_2_method", "t_from_2_method", 800, 800);
     t_from_2_method->SetLogy();
     
-    TRatioPlot* tall = new TRatioPlot(two_meth_tdist, t_lAger, "pois");
+    TRatioPlot* tall = new TRatioPlot(two_meth_tdist, mtgg, "pois");
     tall->Draw("AL");
-    tall->SetSeparationMargin(0.02);
+    tall->SetSeparationMargin(0);
     
     tall->GetLowerRefGraph()->SetMinimum(0);
     tall->GetLowerRefGraph()->SetMaximum(1.5);
@@ -3378,12 +3556,7 @@ void modify_jpsi() {
     
     // Format upper (main) pad
     tall->GetUpperPad()->cd();
-    t_lAger->GetXaxis()->SetTitle("-t [GeV^{2}]");
-    //t_lAger->GetYaxis()->SetTitle("Counts");
-    t_lAger->SetStats(0);
-    t_lAger->SetLineWidth(3);
-    t_lAger->SetLineColor(1);
-    t_lAger->Draw();
+    mtgg->Draw();
     
     two_meth_tdist->SetLineWidth(3);
     two_meth_tdist->SetLineColor(2);
@@ -3391,9 +3564,16 @@ void modify_jpsi() {
     two_meth_tdist->GetYaxis()->SetTitle("Counts");
     two_meth_tdist->Draw("SAME");
     
+    two_meth_tdist_accept->SetLineWidth(3);
+    two_meth_tdist_accept->SetLineColor(4);
+    two_meth_tdist_accept->GetXaxis()->SetTitle("-t [GeV^{2}]");
+    two_meth_tdist_accept->GetYaxis()->SetTitle("Counts");
+    two_meth_tdist_accept->Draw("SAME");
+    
     TLegend *t_many_method = new TLegend(0.8, 0.8, 0.9, 0.9);
     t_many_method->SetBorderSize(0);
-    t_many_method->AddEntry(t_lAger, "Truth MC", "l");
+    t_many_method->AddEntry(mtgg, "Truth MC", "l");
+    t_many_method->AddEntry(two_meth_tdist_accept, "Accept", "l");
     t_many_method->AddEntry(two_meth_tdist, "RECO", "l");
     t_many_method->Draw();
     
@@ -3425,10 +3605,121 @@ void modify_jpsi() {
     t2D_with_diff_allCroll->Draw("COLZ");
     
     TCanvas* ep_test = new TCanvas("ep_test", "ep_test", 800, 800);
+    ep_test->Divide(2,2);
     
-    eptest->SetLineWidth(3);
-    eptest->SetLineColor(1);
-    eptest->Draw();
+    ep_test->cd(1);
+    h_missingMass->SetLineWidth(3);
+    h_missingMass->SetLineColor(1);
+    h_missingMass->Draw();
+    
+    ep_test->cd(2);
+    h_missingMass_rc->SetLineWidth(3);
+    h_missingMass_rc->SetLineColor(1);
+    h_missingMass_rc->Draw();
+    
+    ep_test->cd(3);
+    h_missingMass2->SetLineWidth(3);
+    h_missingMass2->SetLineColor(1);
+    h_missingMass2->Draw();
+    
+    ep_test->cd(4);
+    h_missingMass2_rc->SetLineWidth(3);
+    h_missingMass2_rc->SetLineColor(1);
+    h_missingMass2_rc->Draw();
+    
+    /*TCanvas* MC_all_final_state = new TCanvas("MC_all_final_state", "MC_all_final_state", 800, 800);
+    
+    AllMCFinalEta->SetStats(0);
+    AllMCFinalEta->GetYaxis()->SetTitle("Counts");
+    AllMCFinalEta->SetLineColor(kBlue);
+    AllMCFinalEta->GetYaxis()->SetRangeUser(0, 50000);
+    AllMCFinalEta->SetLineWidth(4);
+    AllMCFinalEta->Draw();
+    fElectron->Draw("Same");
+    hjpsi_eta_MC->SetLineColor(kRed);
+    hjpsi_eta_MC->Draw("Same");
+    fPositron->SetLineColor(kViolet);
+    fPositron->Draw("Same");
+    
+    TLegend *MCAllFinalState = new TLegend(0.8, 0.8, 0.9, 0.9);
+    MCAllFinalState->SetBorderSize(0);
+    MCAllFinalState->AddEntry(AllMCFinalEta, "Proton", "l");
+    MCAllFinalState->AddEntry(fElectron, "SC. Electron", "l");
+    MCAllFinalState->AddEntry(hjpsi_eta_MC, "DC. Electron", "l");
+    MCAllFinalState->AddEntry(fPositron, "Positron", "l");
+    MCAllFinalState->Draw();*/
+    
+    TCanvas *E_P_final_DCePositron = new TCanvas("E_P_final_DCePositron","E_P_final_DCePositron",1800,600);
+    E_P_final_DCePositron->Divide(3,1);
+    
+    E_P_final_DCePositron->cd(1);
+    E_P_final_SCe_MC->GetXaxis()->SetTitle("E/|P|");
+    E_P_final_SCe_MC->GetXaxis()->SetRangeUser(-1,3);
+    E_P_final_SCe_MC->SetStats(0);
+    E_P_final_SCe_MC->SetLineColor(1);
+    E_P_final_SCe_MC->SetLineWidth(4);
+    E_P_final_SCe_MC->Draw();
+    
+    E_P_final_SCe_RC->SetLineColor(kRed);
+    E_P_final_SCe_RC->SetLineWidth(4);
+    E_P_final_SCe_RC->Draw("SAME");
+    
+    TLegend *ScatElect = new TLegend(0.8, 0.8, 0.9, 0.9);
+    ScatElect->SetBorderSize(0);
+    ScatElect->AddEntry(E_P_final_SCe_MC, "SC. Electron (MC)", "l");
+    ScatElect->AddEntry(E_P_final_SCe_RC, "SC. Electron (RECO)", "l");
+    ScatElect->Draw();
+    
+    E_P_final_DCePositron->cd(2);
+    E_P_final_DCe_MC->GetXaxis()->SetTitle("E/|P|");
+    E_P_final_DCe_MC->GetXaxis()->SetRangeUser(-1,3);
+    E_P_final_DCe_MC->SetStats(0);
+    E_P_final_DCe_MC->SetLineColor(1);
+    E_P_final_DCe_MC->SetLineWidth(4);
+    E_P_final_DCe_MC->Draw();
+    
+    E_P_final_DCe_RC->SetLineColor(kRed);
+    E_P_final_DCe_RC->SetLineWidth(4);
+    E_P_final_DCe_RC->Draw("SAME");
+    
+    TLegend *DecayElect = new TLegend(0.8, 0.8, 0.9, 0.9);
+    DecayElect->SetBorderSize(0);
+    DecayElect->AddEntry(E_P_final_DCe_MC, "DC. Electron (MC)", "l");
+    DecayElect->AddEntry(E_P_final_DCe_RC, "DC. Electron (RECO)", "l");
+    DecayElect->Draw();
+    
+    E_P_final_DCePositron->cd(3);
+    E_P_final_Posit_MC->GetXaxis()->SetTitle("E/|P|");
+    E_P_final_Posit_MC->GetXaxis()->SetRangeUser(-1,3);
+    E_P_final_Posit_MC->SetStats(0);
+    E_P_final_Posit_MC->SetLineColor(1);
+    E_P_final_Posit_MC->SetLineWidth(4);
+    E_P_final_Posit_MC->Draw();
+    
+    E_P_final_Posit_RC->SetLineColor(kRed);
+    E_P_final_Posit_RC->SetLineWidth(4);
+    E_P_final_Posit_RC->Draw("SAME");
+    
+    TLegend *Final_Posit = new TLegend(0.8, 0.8, 0.9, 0.9);
+    Final_Posit->SetBorderSize(0);
+    Final_Posit->AddEntry(E_P_final_Posit_MC, "Final Positron (MC)", "l");
+    Final_Posit->AddEntry(E_P_final_Posit_RC, "Final Positron (RECO)", "l");
+    Final_Posit->Draw();
+    
+    // Target cross section in barns
+    double CrosSec_mc = mtgg->GetEntries() * 1e-7 ;
+    //double CrosSec_rc = mtgTot->GetEntries() * 1e-7;
+    double CrosSec_rc = t_from_2_method_corrected->GetEntries() * 1e-7;
+    cout << " " << endl;
+    std::cout << "MC #sigma = " << CrosSec_mc <<" nb"<< std::endl;
+    std::cout << "RECO #sigma = " << CrosSec_rc <<" nb"<< std::endl;
+    
+    h_missingMass->Write();
+    h_missingMass_rc->Write();
+    two_meth_tdist->Write();
+    two_meth_tdist_accept->Write();
+    h_CorrectionFactor->Write();
+    t_from_2_method_corrected->Write();
     
     outputFile->Close();
     
@@ -3442,8 +3733,11 @@ void modify_jpsi() {
     cout << "Total Number Of Events: " << z0 <<endl;
     cout << "Total Number Of Events in RP Tracks: " << z1 <<endl;
     cout << "Total Number Of Events in B0: " << z2 << endl;
-    cout << "Total Number Of Events in elecron selection: " << z3+z4 << endl;
-    cout << "Total Number Of J/Psi Events " << z5+z55 << endl;
+    cout << "MC electrons: " << z3 << endl;
+    cout << "RECo electrons: " << z4 << endl;
+    cout << "MC J/#psi " << mcj << endl;
+    cout << "RECO J/#psi " << rcj << endl;
+    cout << "t_distribution  " << t_di << endl;
     
     return;
     
