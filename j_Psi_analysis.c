@@ -1,7 +1,7 @@
 //Code written by Olaiya Olokunboyo, University of New Hampshire for
 //generating gluons distribution and necessary kinematics.
 //To run on the default input file (streaming files from server), make sure you are in eic-shell environment.
-//May.22.2025
+//Feb.23.2026
 ///volatile/eic/EPIC/RECO/25.07.0/epic_craterlake/EXCLUSIVE/DIFFRACTIVE_JPSI_ABCONV/lAger3.6.1-1.0/10x100/hiAcc
 
 #include <iostream>
