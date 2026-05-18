@@ -166,7 +166,7 @@ void dvmp_cross_section()
 
     c1->SetLogy();
 
-    sig_truth->GetYaxis()->SetRangeUser(1e-6, 1e-1);
+    sig_truth->GetYaxis()->SetRangeUser(1e-5, 1e-1);
     sig_truth->Draw("HIST");
     sig_reco->Draw("E1 SAME");
     sig_corr->Draw("E1 SAME");
