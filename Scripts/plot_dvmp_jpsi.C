@@ -33,40 +33,43 @@ void DrawCombinedH1(
     bool useLogZ = false,
     bool useXRange = false,
     double xMin = 0,
-    double xMax = 0
+    double xMax = 0,
+    bool useYRange = false,
+    double yMin = 0,
+    double yMax = 0
 )
 {
     TCanvas *c =
-        new TCanvas(outputName, outputName, 900, 800);
-
+    new TCanvas(outputName, outputName, 900, 800);
+    
     if (useLogX)
         c->SetLogx();
-
+    
     if (useLogY)
         c->SetLogy();
-
+    
     if (useLogZ)
         c->SetLogz();
-
+    
     double maxY = 0.0;
-
+    
     for (auto h : hists)
     {
         if (!h) return;
-
+        
         maxY = TMath::Max(maxY, h->GetMaximum());
     }
-
+    
     TLegend *leg =
-        new TLegend(0.60, 0.70, 0.88, 0.88);
-
+    new TLegend(0.70, 0.7, 0.82, 0.88);
+    
     leg->SetBorderSize(0);
     leg->SetFillStyle(0);
-
+    
     for (int i = 0; i < hists.size(); ++i)
     {
         TH1F *h = hists[i];
-
+        
         h->SetStats(0);
         h->SetTitle(title);
         h->GetXaxis()->SetTitle(xTitle);
@@ -75,10 +78,15 @@ void DrawCombinedH1(
         
         if (useXRange)
             h->GetXaxis()->SetRangeUser(xMin, xMax);
-
+        
         if (i == 0)
         {
-            if (useLogY)
+            if (useYRange)
+            {
+                h->SetMinimum(yMin);
+                h->SetMaximum(yMax);
+            }
+            else if (useLogY)
             {
                 h->SetMinimum(0.1);
                 h->SetMaximum(maxY * 10.0);
@@ -89,21 +97,21 @@ void DrawCombinedH1(
                 h->SetMaximum(1.25 * maxY);
             }
         }
-
+        
         h->SetLineColor(colors[i]);
         h->SetLineWidth(3);
-
+        
         if (i == 0)
             h->Draw("hist");
         else
             h->Draw("hist same");
-
+        
         leg->AddEntry(h, labels[i], "l");
     }
-
+    
     leg->Draw();
     c->SaveAs(outputName + ".pdf");
-
+    
     delete c;
 }
 
@@ -128,17 +136,17 @@ void DrawH2(
 )
 {
     if (!h) return;
-
-    TCanvas *c = new TCanvas(outputName, outputName, 900, 800);
-
+    
+    TCanvas *c = new TCanvas(outputName, outputName, 900, 900);
+    
     c->SetLeftMargin(0.14);
     c->SetRightMargin(0.16);
     c->SetBottomMargin(0.13);
-
+    
     if (useLogX) c->SetLogx();
     if (useLogY) c->SetLogy();
     if (useLogZ) c->SetLogz();
-
+    
     h->SetStats(0);
     h->SetTitle("");
     h->GetXaxis()->SetTitle(xTitle);
@@ -148,18 +156,112 @@ void DrawH2(
     h->GetXaxis()->SetTitleOffset(1.2);
     h->GetYaxis()->SetTitleOffset(1.5);
     h->GetZaxis()->SetTitleOffset(1.4);
-
+    
     h->Draw("COLZ");
-
+    
     c->SaveAs(outputName + ".pdf");
+    
+    delete c;
+}
+
+void DrawHS2(
+    TH2F *h,
+    TString xTitle,
+    TString yTitle,
+    TString outputName,
+    bool useLogX = false,
+    bool useLogY = false,
+    bool useLogZ = true
+)
+{
+    if (!h) return;
+    
+    TCanvas *c = new TCanvas(outputName, outputName, 900, 800);
+    
+    c->SetLeftMargin(0.14);
+    c->SetRightMargin(0.16);
+    c->SetBottomMargin(0.13);
+    
+    if (useLogX) c->SetLogx();
+    if (useLogY) c->SetLogy();
+    if (useLogZ) c->SetLogz();
+    
+    h->SetStats(0);
+    h->SetTitle("");
+    h->GetXaxis()->SetTitle(xTitle);
+    h->GetYaxis()->SetTitle(yTitle);
+    h->GetZaxis()->SetMaxDigits(3);
+    
+    h->GetXaxis()->SetTitleOffset(1.2);
+    h->GetYaxis()->SetTitleOffset(1.5);
+    h->GetZaxis()->SetTitleOffset(1.4);
+    
+    // Restrict displayed range
+    h->GetXaxis()->SetRangeUser(0.0, 2.0);
+    h->GetYaxis()->SetRangeUser(0.0, 2.0);
+    
+    h->Draw("COLZ");
+    
+    c->SaveAs(outputName + ".pdf");
+    
+    delete c;
+}
+
+void DrawSingleH1(
+    TH1* h,
+    TString legendLabel,
+    const char* xTitle,
+    const char* yTitle,
+    TString outName,
+    double xmin = -999,
+    double xmax = -999
+)
+{
+    if (!h)
+    {
+        std::cout << "Histogram not found!" << std::endl;
+        return;
+    }
+
+    gStyle->SetOptStat(0);
+    gStyle->SetOptTitle(0);
+
+    TCanvas* c = new TCanvas("c_single_h1", "c_single_h1", 800, 700);
+
+    h->SetLineColor(kBlack);
+    h->SetLineWidth(2);
+
+    h->SetTitle("");
+
+    h->GetXaxis()->SetTitle(xTitle);
+    h->GetYaxis()->SetTitle(yTitle);
+    h->GetYaxis()->SetTitleOffset(1.3);
+
+    if (xmin < xmax)
+        h->GetXaxis()->SetRangeUser(xmin, xmax);
+
+    h->Draw("HIST");
+
+    TLegend* leg = new TLegend(0.40, 0.75, 0.88, 0.88);
+    leg->SetBorderSize(0);
+    leg->SetFillStyle(0);
+    leg->SetTextSize(0.04);
+    leg->AddEntry(h, legendLabel, "l");
+    leg->Draw();
+
+    c->SaveAs(outName + ".pdf");
 
     delete c;
 }
 
 void plot_dvmp_jpsi()
 {
-    TString inputFileName = "dvmp_benchmark_data_10x130_May_2026_run_0.root";
-    TString outputDir = "dvmp_jpsi_plots";
+    TString inputFileName = "benchmark_data_10x130_June_2026_From_April_2026_run_0.root";
+    //TString inputFileName = "benchmark_data_10x130_June_2026_run_0.root";
+    //TString inputFileName = "dvmp_benchmark_data_10x130_June_2026_run_0.root";
+    //TString inputFileName = "DIS_background_data_10x130_June_2026_run_0.root";
+    TString outputDir = "dvmp_jpsi_plots_April_2026";
+    //TString outputDir = "dvmp_jpsi_plots";
     
     gSystem->mkdir(outputDir, kTRUE);
     gStyle->SetOptStat(0);
@@ -245,18 +347,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_xb_lAger"),
-                       GetH1(file, "h_reco_EM_x"),
-                       GetH1(file, "EM_x")
+                       GetH1(file, "h_reco_EM_x")
                    },
                    {
                        "Truth",
-                       "RECO Electron",
-                       "Inclusive Electron"
+                       "RECO Electron"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    //"x_{B} Comparison: Electron Method",
                    "",
@@ -274,18 +373,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_xb_lAger"),
-                       GetH1(file, "h_reco_JB_x"),
-                       GetH1(file, "JB_x_in")
+                       GetH1(file, "h_reco_JB_x")
                    },
                    {
                        "Truth",
-                       "RECO JB",
-                       "Inclusive JB"
+                       "RECO JB"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    //"x_{B} Comparison: JB Method",
                    "",
@@ -303,18 +399,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_xb_lAger"),
-                       GetH1(file, "h_reco_eSigma_x"),
-                       GetH1(file, "ESig_x_in")
+                       GetH1(file, "h_reco_eSigma_x")
                    },
                    {
                        "Truth",
-                       "RECO eSigma",
-                       "Inclusive eSigma"
+                       "RECO eSigma"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    //"x_{B} Comparison: eSigma Method",
                    "",
@@ -326,24 +419,44 @@ void plot_dvmp_jpsi()
                    false
                    );
     
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_matched_ecal_dr")
+                   },
+                   {
+                       "Electron #DeltaR"
+                   },
+                   {
+                       kBlack
+                   },
+                   //"x_{B} Comparison: eSigma Method",
+                   "",
+                   "#DeltaR",
+                   "Counts",
+                   outputDir + "/Isolation",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0,
+                   0.45
+                   );
+    
     //---------------------------------------------
     // xB comparison: DA method
     //---------------------------------------------
     DrawCombinedH1(
                    {
                        GetH1(file, "h_xb_lAger"),
-                       GetH1(file, "h_reco_DA_x"),
-                       GetH1(file, "DA_x_in")
+                       GetH1(file, "h_reco_DA_x")
                    },
                    {
                        "Truth",
-                       "RECO DA",
-                       "Inclusive DA"
+                       "RECO DA"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    //"x_{B} Comparison: DA Method",
                    "",
@@ -361,18 +474,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_Q2_lAger"),
-                       GetH1(file, "h_reco_EM_Q2"),
-                       GetH1(file, "EM_Q2")
+                       GetH1(file, "h_reco_EM_Q2")
                    },
                    {
                        "Truth",
-                       "RECO Electron",
-                       "Inclusive Electron"
+                       "RECO Electron"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "Q^{2} [GeV^{2}]",
@@ -389,18 +499,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_Q2_lAger"),
-                       GetH1(file, "h_reco_JB_Q2"),
-                       GetH1(file, "JB_Q2_in")
+                       GetH1(file, "h_reco_JB_Q2")
                    },
                    {
                        "Truth",
-                       "RECO JB",
-                       "Inclusive JB"
+                       "RECO JB"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "Q^{2} [GeV^{2}]",
@@ -417,18 +524,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_Q2_lAger"),
-                       GetH1(file, "h_reco_eSigma_Q2"),
-                       GetH1(file, "ESig_Q2_in")
+                       GetH1(file, "h_reco_eSigma_Q2")
                    },
                    {
                        "Truth",
-                       "RECO eSigma",
-                       "Inclusive eSigma"
+                       "RECO eSigma"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "Q^{2} [GeV^{2}]",
@@ -445,18 +549,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_Q2_lAger"),
-                       GetH1(file, "h_reco_DA_Q2"),
-                       GetH1(file, "DA_Q2_in")
+                       GetH1(file, "h_reco_DA_Q2")
                    },
                    {
                        "Truth",
-                       "RECO DA",
-                       "Inclusive DA"
+                       "RECO DA"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "Q^{2} [GeV^{2}]",
@@ -473,18 +574,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_y_lAger"),
-                       GetH1(file, "h_reco_EM_y"),
-                       GetH1(file, "EM_y")
+                       GetH1(file, "h_reco_EM_y")
                    },
                    {
                        "Truth",
-                       "RECO Electron",
-                       "Inclusive Electron"
+                       "RECO Electron"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "y",
@@ -501,18 +599,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_y_lAger"),
-                       GetH1(file, "h_reco_JB_y"),
-                       GetH1(file, "JB_y_in")
+                       GetH1(file, "h_reco_JB_y")
                    },
                    {
                        "Truth",
-                       "RECO JB",
-                       "Inclusive JB"
+                       "RECO JB"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "y",
@@ -529,18 +624,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_y_lAger"),
-                       GetH1(file, "h_reco_eSigma_y"),
-                       GetH1(file, "ESig_y_in")
+                       GetH1(file, "h_reco_eSigma_y")
                    },
                    {
                        "Truth",
-                       "RECO eSigma",
-                       "Inclusive eSigma"
+                       "RECO eSigma"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "y",
@@ -557,18 +649,15 @@ void plot_dvmp_jpsi()
     DrawCombinedH1(
                    {
                        GetH1(file, "h_y_lAger"),
-                       GetH1(file, "h_reco_DA_y"),
-                       GetH1(file, "DA_y_in")
+                       GetH1(file, "h_reco_DA_y")
                    },
                    {
                        "Truth",
-                       "RECO DA",
-                       "Inclusive DA"
+                       "RECO DA"
                    },
                    {
                        kBlack,
-                       kRed,
-                       kBlue
+                       kRed
                    },
                    "",
                    "y",
@@ -602,6 +691,8 @@ void plot_dvmp_jpsi()
     DrawH2(GetH2(file, "h2_y_JB_res"), "#it{y}_{truth}", "#it{y}_{reco}", outputDir + "/res_y_JB", false, false, true);
     DrawH2(GetH2(file, "h2_y_eSigma_res"), "#it{y}_{truth}", "#it{y}_{reco}", outputDir + "/res_y_eSigma", false, false, true);
     DrawH2(GetH2(file, "h2_y_DA_res"), "#it{y}_{truth}", "#it{y}_{reco}", outputDir + "/res_y_DA", false, false, true);
+    
+    DrawH2(GetH2(file, "h2_reco_Q2_vs_x"), "#it{x}", "#it{Q^{2}} [GeV^{2}]", outputDir + "/q2_vs_x", true, true, true);
     
     //---------------------------------------------
     // x resolution comparison
@@ -705,12 +796,12 @@ void plot_dvmp_jpsi()
                        GetH1(file, "h_CalEnergy_minus_SCElecEnergy")
                    },
                    {
-                       "Track Energy Resolution",
-                       "Calorimeter Energy Resolution"
+                       "Track",
+                       "Calorimeter"
                    },
                    {
-                       kBlue,
-                       kRed
+                       kRed,
+                       kBlack
                    },
                    "",
                    "(E_{MC} - E_{reco}) / E_{MC}",
@@ -718,7 +809,10 @@ void plot_dvmp_jpsi()
                    outputDir + "/electron_energy_resolution_comparison",
                    false,
                    false,
-                   false
+                   false,
+                   true,
+                   -0.4,
+                   0.4
                    );
     
     //---------------------------------------------
@@ -738,10 +832,130 @@ void plot_dvmp_jpsi()
     // Track energy resolution vs eta
     //---------------------------------------------
     DrawH2(
-           GetH2(file, "h_Track_DE_over_E_vs_Eta"),
+           GetH2(file, "h_Cal_DE_over_E_vs_Eta"),
            "#eta_{MC}",
-           "(E_{MC} - E_{track}) / E_{MC}",
-           outputDir + "/track_dE_over_E_vs_eta",
+           "(E_{MC} - E_{cal}) / E_{MC}",
+           outputDir + "/cal_dE_over_E_vs_eta",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dy_EM"),
+           "y_{MC}",
+           "(y_{MC} - y_{RECO}) / y_{MC}",
+           outputDir + "/dy_EM_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dy_DA"),
+           "y_{MC}",
+           "(y_{MC} - y_{RECO}) / y_{MC}",
+           outputDir + "/dy_DA_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dy_JB"),
+           "y_{MC}",
+           "(y_{MC} - y_{RECO}) / y_{MC}",
+           outputDir + "/dy_JB_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dy_eSigma"),
+           "y_{MC}",
+           "(y_{MC} - y_{RECO}) / y_{MC}",
+           outputDir + "/dy_eSigma_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dx_EM"),
+           "x_{MC}",
+           "(x_{MC} - x_{RECO}) / x_{MC}",
+           outputDir + "/dx_EM_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dx_DA"),
+           "x_{MC}",
+           "(x_{MC} - x_{RECO}) / x_{MC}",
+           outputDir + "/dx_DA_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dx_JB"),
+           "x_{MC}",
+           "(x_{MC} - x_{RECO}) / x_{MC}",
+           outputDir + "/dx_JB_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dx_eSigma"),
+           "x_{MC}",
+           "(x_{MC} - x_{RECO}) / x_{MC}",
+           outputDir + "/dx_eSigma_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dQ2_eSigma"),
+           "Q^{2}_{MC}",
+           "(Q^{2}_{MC} - Q^{2}_{RECO}) / Q^{2}_{MC}",
+           outputDir + "/dQ2_eSigma_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dQ2_EM"),
+           "Q^{2}_{MC}",
+           "(Q^{2}_{MC} - Q^{2}_{RECO}) / Q^{2}_{MC}",
+           outputDir + "/dQ2_EM_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dQ2_DA"),
+           "Q^{2}_{MC}",
+           "(Q^{2}_{MC} - Q^{2}_{RECO}) / Q^{2}_{MC}",
+           outputDir + "/dQ2_DA_resolution",
+           false,
+           false,
+           true
+           );
+    
+    DrawH2(
+           GetH2(file, "h2_dQ2_JB"),
+           "Q^{2}_{MC}",
+           "(Q^{2}_{MC} - Q^{2}_{RECO}) / Q^{2}_{MC}",
+           outputDir + "/dQ2_JB_resolution",
            false,
            false,
            true
@@ -766,7 +980,10 @@ void plot_dvmp_jpsi()
                    outputDir + "/matched_eop",
                    false,
                    false,
-                   false
+                   false,
+                   true,
+                   0.6,
+                   1.4
                    );
     
     //---------------------------------------------
@@ -822,7 +1039,10 @@ void plot_dvmp_jpsi()
                    outputDir + "/e_minus_pz_MC_RECO",
                    false,
                    false,
-                   false
+                   false,
+                   true,
+                   15,
+                   25
                    );
     
     //---------------------------------------------
@@ -886,6 +1106,78 @@ void plot_dvmp_jpsi()
                    false,
                    false
                    );
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_missingMass_MC")
+                   },
+                   {
+                       "MC         "
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "M_{X} [GeV]",
+                   "Counts",
+                   outputDir + "/missing_mass_MC",
+                   false,
+                   false,
+                   false
+                   );
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_missingMass_RP")
+                   },
+                   {
+                       "RECO RP"
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "M_{X} [GeV]",
+                   "Counts",
+                   outputDir + "/missing_mass_RECO_RP",
+                   false,
+                   false,
+                   false
+                   );
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_missingMass_B0")
+                   },
+                   {
+                       "RECO B0"
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "M_{X} [GeV]",
+                   "Counts",
+                   outputDir + "/missing_mass_RECO_B0",
+                   false,
+                   false,
+                   false
+                   );
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_sanity_methL_miss_cut")
+                   },
+                   {
+                       "Method L"
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "M_{X} [GeV]",
+                   "Counts",
+                   outputDir + "/missing_mass_RECO_MethodL",
+                   false,
+                   false,
+                   false
+                   );
     
     //---------------------------------------------
     // Scattered electron energy: MC vs RECO vs ECal
@@ -920,7 +1212,7 @@ void plot_dvmp_jpsi()
     //---------------------------------------------
     DrawCombinedH1(
                    {
-                       GetH1(file, "h_t_lAger"),
+                       GetH1(file, "h_t_MC"),
                        GetH1(file, "h_t_RECO_RP"),
                        GetH1(file, "h_t_RECO_B0")
                    },
@@ -943,7 +1235,7 @@ void plot_dvmp_jpsi()
                    false,
                    true,
                    0.0,
-                   2.0
+                   1.6
                    );
     
     //---------------------------------------------
@@ -951,12 +1243,12 @@ void plot_dvmp_jpsi()
     //---------------------------------------------
     DrawCombinedH1(
                    {
-                       GetH1(file, "h_t_lAger"),
+                       GetH1(file, "h_t_MC"),
                        GetH1(file, "h_t_MethodL_RECO")
                    },
                    {
                        "Truth",
-                       "RECO Method L"
+                       "RECO Method 2"
                    },
                    {
                        kBlack,
@@ -971,111 +1263,337 @@ void plot_dvmp_jpsi()
                    false,
                    true,
                    0.0,
-                   2.0
+                   1.6
                    );
     
     //---------------------------------------------
     // -t comparison: Truth, RP, B0, Method L, Acceptance
     //---------------------------------------------
     DrawCombinedH1(
-        {
-            GetH1(file, "h_t_lAger"),
-            GetH1(file, "h_t_RECO_RP"),
-            GetH1(file, "h_t_RECO_B0"),
-            GetH1(file, "h_t_MethodL_RECO"),
-            GetH1(file, "h_t_lAger_accept")
-        },
-        {
-            "Truth",
-            "RECO RP",
-            "RECO B0",
-            "RECO Method L",
-            "Accepted Truth"
-        },
-        {
-            kBlack,
-            kRed,
-            kBlue,
-            kViolet,
-            kGreen + 2
-        },
-        "",
-        "-t [GeV^{2}]",
-        "Counts",
-        outputDir + "/t_comparison_truth_RP_B0_MethodL_accept",
-        false,
-        true,
-        false,
-        true,
-        0.0,
-        2.0
-    );
+                   {
+                       //GetH1(file, "h_t_lAger"),
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_RECO_RP"),
+                       GetH1(file, "h_t_RECO_B0"),
+                       GetH1(file, "h_t_MethodL_RECO"),
+                       GetH1(file, "h_t_lAger_accept")
+                   },
+                   {
+                       "MC",
+                       "RECO RP",
+                       "RECO B0",
+                       "RECO Method L",
+                       "Accept"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue,
+                       kViolet,
+                       kGreen + 2
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_comparison_truth_RP_B0_MethodL_accept",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       //GetH1(file, "h_t_lAger"),
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_MethodL_RECO"),
+                       GetH1(file, "h_t_lAger_accept")
+                   },
+                   {
+                       "MC",
+                       "RECO Method 2",
+                       "Accept"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_comparison_MC_MethodL_accept",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_lAger_accept"),
+                       GetH1(file, "h_t_RECO_RPB0"),
+                       GetH1(file, "h_t_RPB0_eff_applied")
+                   },
+                   {
+                       "MC",
+                       "Accept",
+                       "RECO RP+B0",
+                       "RP+B0 Eff Applied"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue,
+                       kViolet
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_RP_B0_accept_eff_applied",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_lAger_accept"),
+                       GetH1(file, "h_t_RECO_RPB0"),
+                   },
+                   {
+                       "MC",
+                       "Accept",
+                       "RECO RP+B0"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_RP_B0_accept",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_t_MC"),
+                       //GetH1(file, "h_t_hybrid_accept"),
+                       GetH1(file, "h_methodL_RP_MethodL_B0")
+                       //GetH1(file, "h_methodL_RP_MethodL_B0_corrected"),
+                   },
+                   {
+                       "MC       ",
+                       //"Accept",
+                       "RECO     "
+                       //"RECO ML+RP+ML+B0"
+                       //"RECO ML+RP+ML+B0 Cor"
+                   },
+                   {
+                       kBlack,
+                       kRed
+                       //kBlue
+                       //kViolet
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_MethodL_RP_MethodL_B0_accept",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6,
+                   true,
+                   1,
+                   1e5
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_lAger_accept"),
+                       GetH1(file, "h_t_RECO_RPB0_MethodL")
+                   },
+                   {
+                       "MC",
+                       "Accept",
+                       "RECO RP+ML+B0"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_RP_MethodL_B0_accept",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6,
+                   true,
+                   10,
+                   1e5
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_methodL_RP_MethodL_B0"),
+                       GetH1(file, "h_methodL_RP_MethodL_B0_eff_applied")
+                   },
+                   {
+                       "MC",
+                       "RECO RP+ML+B0",
+                       "RECO Corrected"
+                   },
+                   {
+                       kBlack,
+                       kRed,
+                       kBlue
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_ML_RP_ML_B0_eff",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6,
+                   true,
+                   10,
+                   1e5
+                   );
     
     //---------------------------------------------
     // -t 2D correlations
     //---------------------------------------------
-    DrawH2(GetH2(file, "h_t2D_RPB0_MethodL"), "Truth -t [GeV^{2}]", "RECO RP+B0+Method L -t [GeV^{2}]", outputDir + "/t2D_RPB0_MethodL", false, false, true);
+    DrawHS2(GetH2(file, "h_t2D_RPB0_MethodL"), "MC -t [GeV^{2}]", "RECO RP+B0+Method L -t [GeV^{2}]", outputDir + "/t2D_RPB0_MethodL", false, false, true);
     
-    DrawH2(GetH2(file, "h_t2D_MethodL"), "Truth -t [GeV^{2}]", "RECO Method L -t [GeV^{2}]", outputDir + "/t2D_MethodL", false, false, true);
+    DrawHS2(GetH2(file, "h_t2D_MethodL"), "MC -t [GeV^{2}]", "RECO Method L -t [GeV^{2}]", outputDir + "/t2D_MethodL", false, false, true);
     
-    DrawH2(GetH2(file, "h_t2D_RPB0"), "Truth -t [GeV^{2}]", "RECO RP+B0 -t [GeV^{2}]", outputDir + "/t2D_RPB0", false, false, true);
+    DrawHS2(GetH2(file, "h_t2D_RPB0"), "MC -t [GeV^{2}]", "RECO RP+B0 -t [GeV^{2}]", outputDir + "/t2D_RPB0", false, false, true);
     
-    DrawH2(GetH2(file, "h_t2D_B0"), "Truth -t [GeV^{2}]", "RECO B0 -t [GeV^{2}]", outputDir + "/t2D_B0", false, false, true);
+    DrawHS2(GetH2(file, "h_t2D_B0"), "MC -t [GeV^{2}]", "RECO B0 -t [GeV^{2}]", outputDir + "/t2D_B0", false, false, true);
     
-    DrawH2(GetH2(file, "h_t2D_RP"), "Truth -t [GeV^{2}]", "RECO RP -t [GeV^{2}]", outputDir + "/t2D_RP", false, false, true);
+    DrawHS2(GetH2(file, "h_t2D_RP"), "MC -t [GeV^{2}]", "RECO RP -t [GeV^{2}]", outputDir + "/t2D_RP", false, false, true);
+    
+    DrawHS2(GetH2(file, "h2_methodL_RP_MethodL_B0"), "MC -t [GeV^{2}]", "RECO ML+RP+ML+B0 -t [GeV^{2}]", outputDir + "/t2D_methodL_RP_MethodL_B0", false, false, true);
     
     //---------------------------------------------
     // -t comparison: Truth vs corrected RP+B0+MethodL
     //---------------------------------------------
     DrawCombinedH1(
-        {
-            GetH1(file, "h_t_lAger"),
-            GetH1(file, "h_t_RPB0_MethodL_corrected")
-        },
-        {
-            "Truth",
-            "Corrected RECO RP+B0+MethodL"
-        },
-        {
-            kBlack,
-            kRed
-        },
-        "",
-        "-t [GeV^{2}]",
-        "Counts",
-        outputDir + "/t_comparison_truth_corrected_RPB0_MethodL",
-        false,
-        true,
-        false,
-        true,
-        0.0,
-        2.0
-    );
-
+                   {
+                       GetH1(file, "h_t_MC"),
+                       GetH1(file, "h_t_RPB0_MethodL_corrected")
+                   },
+                   {
+                       "Truth",
+                       "Corrected RECO RP+B0+MethodL"
+                   },
+                   {
+                       kBlack,
+                       kRed
+                   },
+                   "",
+                   "-t [GeV^{2}]",
+                   "Counts",
+                   outputDir + "/t_comparison_truth_corrected_RPB0_MethodL",
+                   false,
+                   true,
+                   false,
+                   true,
+                   0.0,
+                   1.6
+                   );
+    
     //---------------------------------------------
     // Correction factor only
     //---------------------------------------------
     DrawCombinedH1(
-        {
-            GetH1(file, "h_CorrectionFactor")
-        },
-        {
-            "Correction Factor"
-        },
-        {
-            kBlack
-        },
-        "",
-        "-t [GeV^{2}]",
-        "C_{f}",
-        outputDir + "/t_correction_factor",
-        false,
-        false,
-        false,
-        true,
-        0.0,
-        2.0
-    );
+                   {
+                       GetH1(file, "h_CorrectionFactor")
+                   },
+                   {
+                       "Correction Factor"
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "C_{f}",
+                   outputDir + "/t_correction_factor",
+                   false,
+                   false,
+                   false,
+                   true,
+                   0.0,
+                   1.6,
+                   true,
+                   0,
+                   3
+                   );
+    
+    DrawCombinedH1(
+                   {
+                       GetH1(file, "h_eff_RP_B0")
+                   },
+                   {
+                       "Efficiency to RP+B0"
+                   },
+                   {
+                       kBlack
+                   },
+                   "",
+                   "Momentum Transfer, -t [GeV^{2}]",
+                   "RECO / MC (Eff)",
+                   outputDir + "/t_efficiency_RP_B0",
+                   false,
+                   false,
+                   false,
+                   true,
+                   0.0,
+                   1.6,
+                   true,
+                   0,
+                   1
+                   );
+    
+    DrawSingleH1(
+                 GetH1(file, "h_EXCLU_jpsi_mass"),
+                 "DIS Background RECO",
+                 "M_{e^{+}e^{-}} [GeV]",
+                 "Counts",
+                 outputDir + "/DIS_Jpsi_mass_RECO",
+                 2.7,
+                 3.4
+                 );
     
     file->Close();
     

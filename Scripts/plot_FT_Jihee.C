@@ -103,18 +103,20 @@ TH1D* BuildFourierHist(
             name,
             "",
             100,
-            -10.0,
-            10.0
+            -2.0,
+            2.0
         );
 
     h->Sumw2();
 
     for (int ibin = 1; ibin <= h->GetNbinsX(); ++ibin)
     {
-        double b = h->GetBinCenter(ibin);
+        //double b = h->GetBinCenter(ibin);
+        double b_fm = h->GetBinCenter(ibin);
+        double b = b_fm / 0.197327;   // convert fm to GeV^{-1}
 
         
-        double D = B*B + b*b, t_max = 2.0, t_min = 0.0;
+        double D = B*B + b*b, t_max = 1.6, t_min = 0.0;
         double E = exp(-t_max * B);
         double C = cos(t_max * b);
         double S = sin(t_max * b);
@@ -181,8 +183,8 @@ TH1D* BuildFourierHist(
 TH1D* NormalizeHist(
     TH1D *h,
     TString name,
-    double bMin = 0.0,
-    double bMax = 10.0
+    double bMin = -2.0,
+    double bMax = 2.0
 )
 {
     TH1D *hNorm =
@@ -202,8 +204,9 @@ TH1D* NormalizeHist(
     if (integral != 0.0)
         hNorm->Scale(1.0 / integral);
 
-    hNorm->GetXaxis()->SetRangeUser(bMin, bMax);
+    hNorm->GetXaxis()->SetRangeUser(-1.6, 1.6);
     hNorm->GetYaxis()->SetTitle("F(b_{T}) / #int F(b_{T}) db_{T}");
+    hNorm->GetYaxis()->SetTitleSize(0.02);
 
     return hNorm;
 }
@@ -213,19 +216,19 @@ TH1D* NormalizeHist(
 //--------------------------------------------------
 void plot_FT_Jihee()
 {
-    double t_max = 2.0, t_min = 0;
-    gSystem->mkdir("dvmp_jpsi_plots", kTRUE);
+    double t_max = 1.6, t_min = 0;
+    gSystem->mkdir("dvmp_jpsi_plots_April_2026", kTRUE);
     SetPlotStyle();
     
     //---------------------------------------------
     // Input file
     //---------------------------------------------
     TFile *file =
-    TFile::Open("dvmp_cross_section_output.root");
+    TFile::Open("dvmp_cross_section_output_April_2026.root");
     
     if (!file || file->IsZombie())
     {
-        cerr << "ERROR: Cannot open dvmp_cross_section_output.root" << endl;
+        cerr << "ERROR: Cannot open dvmp_cross_section_output_April_2026.root" << endl;
         return;
     }
     
@@ -257,7 +260,7 @@ void plot_FT_Jihee()
     hTruth->SetLineWidth(3);
     hTruth->GetXaxis()->SetTitle("-t [GeV^{2}]");
     hTruth->GetYaxis()->SetTitle("d#sigma/dt [nb/GeV^{2}]");
-    hTruth->GetXaxis()->SetRangeUser(0.0, 2.0);
+    hTruth->GetXaxis()->SetRangeUser(0.0, 1.6);
     hTruth->GetYaxis()->SetRangeUser(1e-5, 1e-1);
     hTruth->GetYaxis()->SetTitleOffset(1.5);
     
@@ -354,7 +357,7 @@ void plot_FT_Jihee()
     legFit->Draw();
     
     cFit->SaveAs(
-                 "dvmp_jpsi_plots/Jihee_t_distribution_exp_fit_clean.pdf"
+                 "dvmp_jpsi_plots_April_2026/Jihee_t_distribution_exp_fit_clean.pdf"
                  );
     
     //---------------------------------------------
@@ -401,7 +404,7 @@ void plot_FT_Jihee()
                      dA_reco,
                      dB_reco,
                      covAB_reco,
-                     kRed,
+                     kBlue,
                      24
                      );
     
@@ -419,22 +422,27 @@ void plot_FT_Jihee()
     cFT->SetLeftMargin(0.20);
     cFT->SetBottomMargin(0.1);
     
-    hFTtruth->GetXaxis()->SetRangeUser(0.0, 10.0);
+    hFTtruth->GetXaxis()->SetRangeUser(0.0, 1.6);
     
     hFTtruth->Draw("HIST E");
     hFTreco->Draw("E1 SAME");
     
     TLegend *legFT =
-    new TLegend(0.55, 0.68, 0.88, 0.88);
+    new TLegend(0.55, 0.65, 0.9, 0.9);
     
     legFT->SetBorderSize(0);
     legFT->SetFillStyle(0);
-    legFT->AddEntry(hFTtruth, "Truth", "l");
-    legFT->AddEntry(hFTreco, "Corrected RECO", "ep");
+    legFT->AddEntry(hFTtruth, "MC", "l");
+    legFT->AddEntry(hFTreco, "RECO", "ep");
+    legFT->AddEntry(hFTreco, "", " ");
+    legFT->AddEntry(hFTreco, "#bf{ePIC Performance}", "");
+    legFT->AddEntry(hFTreco, "26.4.1 Campaign", "");
+    legFT->AddEntry(hFTreco, "e+p DVJ/#psiP, 10 #times 130 GeV^{2}", "");
+    legFT->AddEntry(hFTreco, "L_{proj} = 1 fb^{-1}, #sqrt{s} = 72 GeV", "");
     legFT->Draw();
     
     cFT->SaveAs(
-                "dvmp_jpsi_plots/Jihee_ft_distribution_non_norm_clean.pdf"
+                "dvmp_jpsi_plots_April_2026/Jihee_ft_distribution_non_norm_clean.pdf"
                 );
     
     //---------------------------------------------
@@ -463,10 +471,10 @@ void plot_FT_Jihee()
                 800
                 );
     
-    cFTnorm->SetLeftMargin(0.15);
+    cFTnorm->SetLeftMargin(0.2);
     cFTnorm->SetBottomMargin(0.13);
     
-    hFTtruthNorm->GetYaxis()->SetRangeUser(0.02, 0.28);
+    //hFTtruthNorm->GetYaxis()->SetRangeUser(0.0, 1.0);
 
     hFTtruthNorm->GetYaxis()->SetTitleOffset(1.15);
     hFTtruthNorm->GetXaxis()->SetTitleOffset(1.0);
@@ -477,27 +485,41 @@ void plot_FT_Jihee()
 
     hFTtruthNorm->GetXaxis()->SetLabelSize(0.040);
     hFTtruthNorm->GetXaxis()->SetTitleSize(0.050);
-    hFTtruthNorm->GetXaxis()->SetRangeUser(0.0, 10.0);
+    hFTtruthNorm->GetXaxis()->SetRangeUser(-1.6, 1.6);
+    hFTrecoNorm->GetXaxis()->SetRangeUser(-1.6, 1.6);
     
     hFTtruthNorm->Draw("HIST E");
     hFTrecoNorm->Draw("E1 SAME");
     
     TLegend *legNorm =
-    new TLegend(0.50, 0.62, 0.88, 0.88);
+    new TLegend(0.65, 0.8, 0.95, 0.9);
     
     legNorm->SetBorderSize(0);
     legNorm->SetFillStyle(0);
     
-    legNorm->AddEntry(hFTtruthNorm, "Truth", "l");
-    legNorm->AddEntry(hFTrecoNorm, "Corrected RECO", "ep");
+    legNorm->AddEntry(hFTtruthNorm, "MC", "l");
+    legNorm->AddEntry(hFTrecoNorm, "RECO", "ep");
     //legNorm->AddEntry((TObject*)nullptr, "#bf{ePIC Performance, 26.03.1}", "");
     //legNorm->AddEntry((TObject*)nullptr, "e+p DVMP J/#psi #rightarrow e^{+}e^{-}", "");
     //legNorm->AddEntry((TObject*)nullptr, "10 #times 130 GeV", "");
     
     legNorm->Draw();
     
+    TLegend *info =
+        new TLegend(0.07, 0.72, 0.7, 0.84);
+
+    info->SetBorderSize(0);
+    info->SetFillStyle(0);
+
+    info->AddEntry((TObject*)nullptr, "#bf{ePIC Performance}", "");
+    info->AddEntry((TObject*)nullptr, "26.4.1 Campaign", "");
+    info->AddEntry((TObject*)nullptr, "e+p DVJ/#psiP, 10 #times 130 GeV^{2}", "");
+    info->AddEntry((TObject*)nullptr, "L_{proj} = 1 fb^{-1}, #sqrt{s} = 72 GeV", "");
+
+    info->Draw();
+    
     cFTnorm->SaveAs(
-                    "dvmp_jpsi_plots/Jihee_ft_distribution_norm_clean.pdf"
+                    "dvmp_jpsi_plots_April_2026/Jihee_ft_distribution_norm_clean.pdf"
                     );
     
     //---------------------------------------------
@@ -505,7 +527,7 @@ void plot_FT_Jihee()
     //---------------------------------------------
     TFile *out =
     new TFile(
-              "dvmp_fourier_jihee_clean_output.root",
+              "dvmp_fourier_jihee_clean_output_April_2026.root",
               "RECREATE"
               );
     
@@ -526,7 +548,7 @@ void plot_FT_Jihee()
     
     cout << endl;
     cout << "Saved Fourier plots:" << endl;
-    cout << "  dvmp_jpsi_plots/Jihee_t_distribution_exp_fit_clean.pdf" << endl;
-    cout << "  dvmp_jpsi_plots/Jihee_ft_distribution_non_norm_clean.pdf" << endl;
-    cout << "  dvmp_jpsi_plots/Jihee_ft_distribution_norm_clean.pdf" << endl;
+    cout << "  dvmp_jpsi_plots_April_2026/Jihee_t_distribution_exp_fit_clean.pdf" << endl;
+    cout << "  dvmp_jpsi_plots_April_2026/Jihee_ft_distribution_non_norm_clean.pdf" << endl;
+    cout << "  dvmp_jpsi_plots_April_2026/Jihee_ft_distribution_norm_clean.pdf" << endl;
 }

@@ -12,14 +12,14 @@ using namespace std;
 
 void dvmp_invariant_mass()
 {
-    gSystem->mkdir("dvmp_jpsi_plots", kTRUE);
+    gSystem->mkdir("dvmp_jpsi_plots_April_2026", kTRUE);
     gStyle->SetOptStat(0);
 
     //---------------------------------------------
     // Open ROOT file
     //---------------------------------------------
     TFile *file =
-        TFile::Open("dvmp_benchmark_data_10x130_May_2026_run_0.root");
+        TFile::Open("benchmark_data_10x130_June_2026_From_April_2026_run_0.root");
 
     if (!file || file->IsZombie())
     {
@@ -66,7 +66,7 @@ void dvmp_invariant_mass()
     fitFcn->SetParLimits(1, 3.0, 3.15);
     fitFcn->SetParLimits(2, 0.005, 0.15);
 
-    fitFcn->SetNpx(1000);
+    fitFcn->SetNpx(10000);
 
     //---------------------------------------------
     // Fit
@@ -83,8 +83,9 @@ void dvmp_invariant_mass()
     jpsimass->SetLineWidth(3);
 
     jpsimass->GetXaxis()->SetRangeUser(2.85, 3.32);
+    jpsimass->GetYaxis()->SetRangeUser(0, 30000);
     jpsimass->GetXaxis()->SetTitle("M_{e^{+}e^{-}} [GeV]");
-    jpsimass->GetYaxis()->SetTitle("Counts");
+    jpsimass->GetYaxis()->SetTitle("N_{evts}");
 
     jpsimass->GetXaxis()->SetTitleOffset(1.25);
     jpsimass->GetYaxis()->SetTitleOffset(1.45);
@@ -103,6 +104,8 @@ void dvmp_invariant_mass()
     canvas->SetBottomMargin(0.12);
 
     jpsimass->Draw("HIST");
+
+    fitFcn->SetRange(fitMin, fitMax);
     fitFcn->Draw("SAME");
 
     //---------------------------------------------
@@ -125,22 +128,24 @@ void dvmp_invariant_mass()
 
     leg->SetBorderSize(0);
     leg->SetFillStyle(0);
-    leg->AddEntry(jpsimass, "RECO J/#psi", "l");
-    leg->AddEntry(fitFcn, "Gaussian + linear fit", "l");
+    leg->AddEntry(jpsimass, "RECO", "l");
+    leg->AddEntry(fitFcn, "Fit", "l");
     leg->Draw();
 
     TLegend *info =
-        new TLegend(0.05, 0.75, 0.5, 0.85);
+        new TLegend(0.05, 0.55, 0.5, 0.85);
 
     info->SetBorderSize(0);
     info->SetFillStyle(0);
 
-    //info->AddEntry((TObject*)nullptr, "#bf{ePIC Performance}", "");
-    //info->AddEntry((TObject*)nullptr, "e+p DVMP J/#psi #rightarrow e^{+}e^{-}", "");
-    //info->AddEntry((TObject*)nullptr, "10 #times 130 GeV, 26.03.1", "");
+    info->AddEntry((TObject*)nullptr, "#bf{ePIC Performance}", "");
+    info->AddEntry((TObject*)nullptr, "26.4.1 Campaign", "");
+    info->AddEntry((TObject*)nullptr, "e+p DVJ/#psiP, 10 #times 130 GeV^{2}", "");
+    info->AddEntry((TObject*)nullptr, "L_{proj} = 1 fb^{-1}, #sqrt{s} = 72 GeV", "");
+    info->AddEntry((TObject*)nullptr, " ", "");
     info->AddEntry((TObject*)nullptr, Form("#mu = %.4f #pm %.4f GeV", mean, meanErr), "");
     info->AddEntry((TObject*)nullptr, Form("#sigma = %.4f #pm %.4f GeV", sigma, sigmaErr), "");
-    info->AddEntry((TObject*)nullptr, Form("%.2f < M_{e^{+}e^{-}} < %.2f GeV", fitMin, fitMax), "");
+    info->AddEntry((TObject*)nullptr, Form("%.2f #leq M_{e^{+}e^{-}} #leq %.2f GeV", fitMin, fitMax), "");
 
     info->Draw();
 
@@ -170,11 +175,11 @@ void dvmp_invariant_mass()
     // Save
     //---------------------------------------------
     cout << "" << endl;
-    canvas->SaveAs("dvmp_jpsi_plots/jpsi_invariant_mass_fit.pdf");
-    cout << "jpsi_invariant_mass_fit.pdf saved in dvmp_jpsi_plots" << endl;
+    canvas->SaveAs("dvmp_jpsi_plots_April_2026/jpsi_invariant_mass_fit.pdf");
+    cout << "jpsi_invariant_mass_fit.pdf saved in dvmp_jpsi_plots_April_2026" << endl;
 
     TFile *out =
-        new TFile("dvmp_jpsi_mass_fit_output.root", "RECREATE");
+        new TFile("dvmp_jpsi_mass_fit_output_April_2026.root", "RECREATE");
 
     out->cd();
     jpsimass->Write("h_jpsi_mass_RC");

@@ -25,11 +25,11 @@ bool LoadFitParams(
 )
 {
     TFile *file =
-        TFile::Open("dvmp_t_fit_parameters.root");
+        TFile::Open("dvmp_t_fit_parameters_April_2026.root");
 
     if (!file || file->IsZombie())
     {
-        cerr << "ERROR: Cannot open dvmp_t_fit_parameters.root" << endl;
+        cerr << "ERROR: Cannot open dvmp_t_fit_parameters_April_2026.root" << endl;
         return false;
     }
 
@@ -143,7 +143,7 @@ TGraphAsymmErrors* MakeBand(
 //---------------------------------------------
 void dvmp_fourier()
 {
-    gSystem->mkdir("dvmp_jpsi_plots", kTRUE);
+    gSystem->mkdir("dvmp_jpsi_plots_April_2026", kTRUE);
     gStyle->SetOptStat(0);
 
     //---------------------------------------------
@@ -161,7 +161,7 @@ void dvmp_fourier()
 
     bool okTruth =
         LoadFitParams(
-            "truth_lAger",
+            "MC",
             A_truth,
             dA_truth,
             B_truth,
@@ -170,7 +170,7 @@ void dvmp_fourier()
 
     bool okReco =
         LoadFitParams(
-            "corrected_RPB0_MethodL",
+            "RECO_Corrected",
             A_reco,
             dA_reco,
             B_reco,
@@ -331,7 +331,7 @@ void dvmp_fourier()
     info->Draw();*/
 
     c->SaveAs(
-        "dvmp_jpsi_plots/fourier_real_truth_vs_reco.pdf"
+        "dvmp_jpsi_plots_April_2026/fourier_real_truth_vs_reco.pdf"
     );
 
     //---------------------------------------------
@@ -339,7 +339,7 @@ void dvmp_fourier()
     //---------------------------------------------
     TFile *out =
         new TFile(
-            "dvmp_fourier_output.root",
+            "dvmp_fourier_output_April_2026.root",
             "RECREATE"
         );
 
@@ -355,6 +355,6 @@ void dvmp_fourier()
 
     cout << endl;
     cout << "Saved Fourier plot: "
-         << "dvmp_jpsi_plots/fourier_real_truth_vs_reco.pdf"
+         << "dvmp_jpsi_plots_April_2026/fourier_real_truth_vs_reco.pdf"
          << endl;
 }
