@@ -60,6 +60,8 @@ dvmp_invariant_mass.c
 * `dvmp_invariant_mass.c` can be executed at any time after `dvmp_jpsi.c` has completed successfully.
 * If `dvmp_jpsi.c` is rerun, the downstream scripts (`dvmp_cross_section.c`, `dvmp_t_fitting.c`, `dvmp_fourier.c`, and `plot_FT_Jihee.C`) should also be rerun to ensure all results are consistent with the updated reconstruction.
 
+* The `run_all_q2_x_bins.sh` and `run_tiles_plots.sh` produces the x-Q^2 bin plot and the t-distribution corresponding to the x-Q^2 bins.  
+
 
 
 EIC software environment container utilities
