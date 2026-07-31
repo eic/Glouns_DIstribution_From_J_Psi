@@ -28,7 +28,7 @@ The analysis scripts must be executed in the order shown below because several s
 The entire analysis can be executed with
 
 ```bash
-bash run_analysis.sh
+bash run_dvmp.sh
 ```
 
 which automatically runs
